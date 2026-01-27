@@ -1,0 +1,5 @@
+<% if current_user.present? %>
+  hi <%= current_user.email %>
+<% else %>
+  <%= link_to "Login", new_user_session_path %>
+<% end %>

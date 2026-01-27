@@ -1,0 +1,4 @@
+<%= turbo_frame_tag "services" do %>
+  <%= link_to "New Service", new_service_path, data: {controller: "modal", turbo_frame: "modal-content"} %>
+  <%= render @services %> 
+<% end %>

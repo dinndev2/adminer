@@ -1,0 +1,32 @@
+<%= form_with model: @service, class: "space-y-6" do |f| %>
+
+  <% if @service.errors.present? %>
+    <p class="text-red-500 text-sm">
+      <%= @service.errors.full_messages.first %>
+    </p>
+  <% end %>
+
+
+  <!-- Task name -->
+  <div>
+    <%= f.text_field :name,
+      placeholder: "Service Name",
+      class: "w-full text-lg font-bold border-2 border-gray-700 focus:outline-none border-none focus:ring-0 placeholder-gray-400"
+    %>
+  </div>
+
+  <!-- Description -->
+  <div class="space-y-1">
+    <label class="text-gray-600 font-semibold text-xs">Description</label>
+    <%= f.text_area :description,
+      rows: 4,
+      placeholder: "Add your description…",
+      class: "w-full rounded-md border-gray-200 p-3 text-sm text-gray-500 resize-none focus:outline-none border mt-1 border-gray-400"
+    %>
+  </div>
+
+  <button type="submit" class="text-white px-2 py-1 hover:bg-gray-800 transition-all rounded text-sm bg-black cursor-pointer">
+    Create Service
+  </button> 
+
+<% end %>

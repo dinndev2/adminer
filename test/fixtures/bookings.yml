@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  customer: one
+  from: 2026-01-22
+  to: 2026-01-22
+  duration: 1
+
+two:
+  name: MyString
+  description: MyText
+  customer: two
+  from: 2026-01-22
+  to: 2026-01-22
+  duration: 1

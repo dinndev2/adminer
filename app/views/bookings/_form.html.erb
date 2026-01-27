@@ -1,0 +1,72 @@
+<%= form_with model: booking, class: "space-y-6", data: { controller: "form" } do |f| %>
+
+  <!-- Task name -->
+  <div> 
+    <% if booking.errors.full_messages_for(:name).any? %>  
+      <span class="text-red-500 text-xs"> <%= booking.errors.full_messages_for(:name).first %> </span> 
+    <% end %>
+    <%= f.text_field :name,
+      placeholder: "Booking Name",
+      class: "w-full text-lg font-bold border-2 border-gray-700 focus:outline-none border-none focus:ring-0 border-gray-400"
+    %>
+  </div>
+  <div class="flex gap-5">  
+    <div class="flex flex-col gap-2 flex-1">
+      <div class="flex gap-2 items-end">  
+        <%= f.label :from, class: "text-gray-600 font-semibold text-xs" %>
+        <% if booking.errors.full_messages_for(:from).any? %>
+          <span class="text-red-500 text-xs"> <%= booking.errors.full_messages_for(:from).first %> </span>
+        <% end %>
+      </div>
+      <%= f.date_field :from, onClick: "this.showPicker()", class: "rounded-lg focus:outline-none border border-gray-300 cursor-pointer p-2 w-full" %>
+    </div>
+    <div class="flex flex-col gap-2 flex-1">
+      <div class="flex gap-2 items-end">  
+        <%= f.label :to, class: "text-gray-600 font-semibold text-xs" %>
+        <% if booking.errors.full_messages_for(:to).any? %>
+          <span class="text-red-500 text-xs"> <%= booking.errors.full_messages_for(:to).first %> </span>
+        <% end %>  
+      </div>
+      <%= f.date_field :to, onClick: "this.showPicker()", class: "rounded-lg focus:outline-none border border-gray-300 cursor-pointer p-2 w-full" %>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="space-y-1">
+    <label for="booking_description" class="text-gray-600 font-semibold text-xs">Description</label>
+    <%= f.text_area :description,
+      rows: 4,
+      placeholder: "Add your description…",
+      class: "w-full rounded-md border-gray-300 p-3 text-sm text-gray-500 resize-none focus:outline-none border mt-1 border-gray-400"
+    %>
+  </div>
+  <button type="button" data-action="click->form#toggleVisibility" class="flex gap-2 text-blue-900 font-bold text-xs cursor-pointer"> 
+    Add Customer
+    <%= inline_svg_tag "plus.svg", class: "h-5 w-5" %>
+  </button>
+  <div data-form-target="toggleable" class="invisible-form">  
+    <%= f.fields_for :customer do |c| %>
+      <div class="space-y-6">  
+        <div class="flex gap-2">  
+          <div class="flex flex-col flex-1"> 
+            <%= c.label :name, class: "text-gray-600 font-semibold text-xs" %>
+            <%= c.text_field :name, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
+          </div>
+          <div class="flex flex-col flex-1"> 
+            <%= c.label :phone, class: "text-gray-600 font-semibold text-xs" %>
+            <%= c.text_field :phone, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
+          </div>
+        </div>
+        <div class="flex flex-col"> 
+          <%= c.label :address, class: "text-gray-600 font-semibold text-xs" %>
+          <%= c.text_field :address, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <button type="submit" class="text-white px-2 py-1 hover:bg-gray-800 transition-all rounded text-sm bg-black cursor-pointer">
+    Create Booking
+  </button> 
+
+<% end %>

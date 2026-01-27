@@ -1,0 +1,26 @@
+<%= turbo_frame_tag "modal" do %>  
+  <div
+    data-modal-target="wrapper"
+    id="modal"
+    data-controller="modal"
+    class="fixed inset-0 z-50 hide"
+  >
+    <!-- backdrop -->
+    <div
+      data-action="click->modal#close"
+      class="absolute inset-0 bg-black/50"
+    ></div>
+
+    <!-- modal panel -->
+    <div id="modal-content-wrapper" data-modal-target="content" class="overflow-scroll min-h-auto max-h-3/4 relative mx-auto mt-24 w-full max-w-lg rounded-lg bg-white p-6 shadow-lg">
+      <button
+        data-action="modal#close"
+        class="absolute cursor-pointer p-2 top-3 right-3 text-gray-500 hover:text-black"
+      >
+        ✕
+      </button>
+
+      <%= turbo_frame_tag "modal-content" %>
+    </div>
+  </div>
+<% end %>

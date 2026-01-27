@@ -1,0 +1,14 @@
+<div class="flex items-center justify-between px-10 py-3 bg-gray-50 border-b-2 border-gray-100">
+  <%= link_to root_path, class: "text-2xl font-bold" do %>
+    <%= title %>
+  <% end %>
+  <div class="flex items-end flex-col">  
+    <p class="text-sm"> <%= current_user.email %> </p>
+    <div class="flex gap-2 text-xs mt-1">  
+      <span class=" text-gray-400"> <%= displayable_position(current_user) %> </span>
+      <%= button_to destroy_user_session_path, method: :delete, class: "flex gap-2 cursor-pointer" do %>
+        <span class="border-l-2 border-gray-900 pl-2"> Logout </span>
+      <% end %> 
+    </div>
+  </div>
+</div>
