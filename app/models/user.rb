@@ -11,4 +11,6 @@ class User < ApplicationRecord
   has_many :admins, through: :owned_managements
 
   has_many :bookings
+
+  validates :email, uniqueness: true
 end

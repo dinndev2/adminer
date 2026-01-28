@@ -1,0 +1,5 @@
+<%= turbo_stream.append("users") do %>
+    <tr class="hover:bg-gray-50 transition animate-pulse text-green-600">
+      <%= render partial: "data", locals: {user: @user} %>
+    </tr>
+<% end %>

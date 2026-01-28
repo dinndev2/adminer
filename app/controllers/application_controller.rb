@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def admin_accessible?
+  def admin_accessible
     return if current_user.nil?
     redirect_to root_path if current_user.member?
   end
