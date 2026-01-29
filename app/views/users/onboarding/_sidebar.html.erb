@@ -1,0 +1,53 @@
+<div class="rounded-lg h-screen py-10">
+  <h1 class="text-3xl font-black text-gray-900"> Onboarding </h1>
+  <p class="text-base text-gray-500 mt-2"> Tell us a bit about you so we can tailor your experience. </p>
+  <aside class="w-full mt-5">
+    <ol class="relative border-gray-300 md:block flex md:flex-col justify-between">
+      <% wizard_steps.each_with_index do |wizard_step, index| %>
+        <% step_index = wizard_steps.index(step) %>
+        <% status =
+            if index < step_index
+              :completed
+            elsif wizard_step == step
+              :current
+            else
+              :upcoming
+            end
+        %>
+
+        <li class="mb-8 md:mb-10 flex md:flex-row flex-col items-center">
+          <!-- Circle -->
+          <span
+            class="
+              flex items-center justify-center
+              w-8 h-8 rounded-full z-10
+              <%= case status
+                when :completed then 'bg-green-700 text-white'
+                when :current then 'bg-gray-600 text-white ring-4 ring-gray-200'
+                else 'bg-gray-200 text-gray-500'
+              end %>
+            "
+          >
+            <% if status == :completed %>
+              <%= inline_svg_tag "check.svg" %>
+            <% else %>
+              <%= index + 1 %>
+            <% end %>
+          </span>
+
+          <!-- Label -->
+          <div class="flex flex-col ml-0 md:ml-4 mt-2 md:mt-0 w-64">  
+            <span class="text-lg font-bold
+              <%= status == :current ? 'text-gray-800' : 'text-gray-400' %>
+            ">
+              <%= wizard_step.to_s.humanize %>
+            </span>
+            <p class="text-sm text-gray-500 mt-2">
+              Tell us a bit about you so we can tailor your experience.Tell us a bit about you so we can tailor your experience.
+            </p>
+          </div>
+        </li>
+      <% end %>
+    </ol>
+  </aside>
+</div>

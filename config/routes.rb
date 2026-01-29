@@ -14,7 +14,9 @@ Rails.application.routes.draw do
   # root "posts#index"
   resources :services
   resources :bookings
-  resources :users
+  resources :users do
+    resources :onboarding, controller: 'users/onboarding'
+  end
 
   get 'settings', to: "users#index", as: :user_settings
   root "dashboard#home"

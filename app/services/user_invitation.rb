@@ -1,5 +1,6 @@
 class UserInvitation
   Result = Struct.new(:record, :success?, :errors)
+
   def initialize(new_user, admin)
     @user = new_user
     @admin = admin
@@ -7,9 +8,11 @@ class UserInvitation
 
  
   def prepare
+    # generate temp password 
     temp_password = SecureRandom.hex(10)
     @user.password = temp_password
     @user.password_confirmation = temp_password
+    # set default role
     @user.role = 'member'
     if @user.save
       Result.new(@user, true, nil)
@@ -22,7 +25,7 @@ class UserInvitation
     result = self.prepare    
     if result.success?
       User.invite!(email: @user.email, name: @user.name)
-      @admin.owned_managements.create(member: @user, admin: @admin)
+      Management.find_or_create_by(member: @user, admin: @admin) # find or create
     end
     result
   end

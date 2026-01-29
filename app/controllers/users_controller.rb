@@ -1,10 +1,5 @@
-# TO CLEANUP - TRANSFER OTHER FUNCTIONALITY TO SERVICES : - ) 
 class UsersController < ApplicationController
   before_action :admin_accessible, only: [:create, :new]
-
-  def update
-    
-  end
   
   def create
     @user = User.find_or_initialize_by(user_params)

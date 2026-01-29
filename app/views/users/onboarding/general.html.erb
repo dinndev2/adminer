@@ -1,0 +1,30 @@
+<div class="p-10 flex justify-center flex-1" data-controller="form">  
+  <%= form_with model: @user, url: user_onboarding_path(current_user, step) do |f| %>
+    <div data-action="click->form#triggerUpload" class="rounded-full p-2 flex items-center justify-center" >
+      <%= image_tag @user.avatar.attached? ? url_for(@user.avatar) : 'user.png', class: "w-28 object-fit-cover h-28 border-2 bg-gray-100 border-gray-200 rounded-full", "data-form-target": "preview" %>
+    </div>
+
+    <%= f.file_field :avatar, class: "hidden", "data-form-target": "fileInput", "data-action": "change->form#preview" %>
+    <div class="flex gap-2 my-2">  
+      <div class="flex flex-col flex-1"> 
+        <%= f.label :name, class: "text-gray-600 font-semibold text-xs" %>
+        <%= f.text_field :name,
+          class: "rounded-lg w-full focus:outline-none border mt-1 border-gray-300 p-2"
+        %>
+      </div>
+      <div class="flex flex-col flex-1 justify-between"> 
+        <%= f.label :email, class: "text-gray-600 font-semibold text-xs" %>
+        <%= f.text_field :email, disabled: true, readonly: true, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
+      </div>
+    </div>
+    <% if @user.errors.full_messages_for(:name).any? %>
+      <span class="text-red-500 text-xs"> <%= @user.errors.full_messages_for(:name).first %> </span>
+    <% end %>
+    <div class="flex gap-2">   
+      <button type="submit"> Next </button>
+      <% if step != :general %>
+        <%= link_to "Prev", wizard_path(previous_step) %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

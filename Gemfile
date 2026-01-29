@@ -71,4 +71,5 @@ gem "inline_svg", "~> 1.10"
 gem "pry", "~> 0.16.0"
 
 gem 'devise_invitable', '~> 2.0.0'
+gem 'wicked'
 

@@ -1,3 +1,4 @@
 <%= turbo_frame_tag "modal-content" do %>
+  <%= render partial: "shared/header", locals: {heading: "Invite Member", svg: ""} %>
   <%= render partial: "form", locals: {user: @user} %>
 <% end %>
