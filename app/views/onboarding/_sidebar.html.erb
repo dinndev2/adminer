@@ -1,0 +1,63 @@
+<div class="h-full">
+  <h1 class="text-3xl font-black text-gray-900">Onboarding</h1>
+  <p class="text-sm text-gray-500 mt-2">
+    Tell us a bit about you so we can tailor your experience.
+  </p>
+
+  <ol class="mt-8 space-y-8">
+    <% step_index = wizard_steps.index(step) %>
+
+    <% wizard_steps.each_with_index do |wizard_step, index| %>
+      <% status =
+          if index < step_index
+            :completed
+          elsif wizard_step == step
+            :current
+          else
+            :upcoming
+          end
+      %>
+
+      <li class="relative pl-12">
+        <!-- vertical line -->
+        <% unless index == wizard_steps.length - 1 %>
+          <span class="absolute left-4 top-10 h-[calc(100%-1.25rem)] w-px bg-gray-200"></span>
+        <% end %>
+
+        <!-- circle -->
+        <span class="
+          absolute left-0 top-0
+          flex items-center justify-center
+          w-8 h-8 rounded-full
+          <%= case status
+              when :completed then 'bg-green-600 text-white'
+              when :current   then 'bg-gray-900 text-white ring-4 ring-gray-200'
+              else                 'bg-gray-100 text-gray-500'
+            end %>
+        ">
+          <% if status == :completed %>
+            <span class="text-sm font-bold">✓</span>
+          <% else %>
+            <span class="text-sm font-bold"><%= index + 1 %></span>
+          <% end %>
+        </span>
+
+        <!-- text -->
+        <div>
+          <p class="text-base font-semibold <%= status == :current ? 'text-gray-900' : 'text-gray-400' %>">
+            <%= wizard_step.to_s.humanize %>
+          </p>
+
+          <p class="mt-1 text-sm text-gray-500">
+            <%= case wizard_step
+                when :general then "Set your profile details."
+                when :company_setup then "Add your company information."
+                when :confirmation then "Review and finish setup."
+                else "Complete this step."
+              end %>
+          </p>
+        </div>
+      </li>
+    <% end %>
+  </ol>
+</div>

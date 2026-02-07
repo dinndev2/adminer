@@ -12,8 +12,6 @@ class UserInvitation
     temp_password = SecureRandom.hex(10)
     @user.password = temp_password
     @user.password_confirmation = temp_password
-    # set default role
-    @user.role = 'member'
     if @user.save
       Result.new(@user, true, nil)
     else
@@ -24,7 +22,7 @@ class UserInvitation
   def invite
     result = self.prepare    
     if result.success?
-      User.invite!(email: @user.email, name: @user.name)
+      @user.invite!(@admin)
       Management.find_or_create_by(member: @user, admin: @admin) # find or create
     end
     result

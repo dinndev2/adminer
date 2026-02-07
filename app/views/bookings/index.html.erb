@@ -1,32 +1,43 @@
-<%= render partial: "shared/components/buttons/link", locals: {path: new_booking_path, label: "Create Booking", svg: nil} %>
+<div class="mx-auto max-w-6xl px-4 py-6 space-y-6">
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-semibold text-gray-900">Bookings</h1>
 
-<div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-200 mt-7">
-  <table class="min-w-full divide-y divide-gray-200">
-    <thead class="bg-gray-50">
-      <tr>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
-          Name
-        </th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
-          Description
-        </th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
-          Status
-        </th>
-        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
-          Assigned To
-        </th>
-      </tr>
-    </thead>
+      <%= render partial: "shared/components/buttons/link",
+        locals: { path: new_booking_path, label: "Create Booking", svg: nil } %>
+    </div>
 
-    <tbody id="bookings" class="divide-y divide-gray-100">
+  <!-- Bookings list (Turbo frame so it can update when day clicked) -->
+  <%= turbo_frame_tag "bookings_frame" do %>
+    <div class="flex flex-col gap-2" id="bookings">
       <% if @bookings.present? %>
-        <%= render @bookings %>
-      <% else %>
-        <td id="empty-state" class="text-center py-10 opacity-80" colspan="4">
-          <%= render partial: "shared/components/buttons/link", locals: {path: new_booking_path, label: "Create Booking", svg: nil} %>
-        </td>
+        <%# render @bookings %>
       <% end %>
-    </tbody>
-  </table>
+    </div>
+  <% end %>
+  <div data-controller="sort" class="flex gap-3">
+    <% @booking_columns.each do |key, col| %>
+      <section class="w-80">
+        <div class="flex items-center justify-between px-1">
+          <h3 class="text-sm font-semibold text-gray-800">
+            <%= col[:title] %>
+          </h3>
+          <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+            <%= col[:bookings].size %>
+          </span>
+        </div>
+
+        <ul
+          data-sort-target="column"
+          data-column="<%= key %>"
+          class="mt-2 min-h-[12rem] space-y-3 rounded-xl border border-gray-200 bg-white p-4"
+        >
+          <% col[:bookings].each do |booking| %>
+            <li class="item" data-id="<%= booking.id %>">
+              <%= render booking %>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+  </div>
 </div>

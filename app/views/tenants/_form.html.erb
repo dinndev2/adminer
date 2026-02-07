@@ -1,0 +1,21 @@
+<div data-controller="form">  
+  <%= form_with model: tenant, url: onboarding_path(step), method: :patch do |f| %>
+    <%= f.file_field :logo, class: "hidden", "data-form-target": "fileInput", "data-action": "change->form#preview" %>
+    <div class="flex gap-6">  
+      <div data-action="click->form#triggerUpload" class="rounded-full p-2 flex items-center cursor-pointer justify-center" >
+        <%= image_tag tenant.logo.attached? ? url_for(tenant.logo) : 'user.png', class: "w-20 object-cover h-20 border-2 bg-gray-700 border-gray-200 rounded-full", "data-form-target": "preview" %>
+      </div>
+      <div class="flex flex-col flex-1 justify-center"> 
+        <%= f.label :name, class: "text-gray-600 font-semibold text-xs" %>
+        <%= f.text_field :name,
+          class: "rounded-lg w-full focus:outline-none border mt-1 border-gray-300 p-2"
+        %>
+      </div>
+      <div class="flex flex-col flex-1 justify-center"> 
+        <%= f.label :description, class: "text-gray-600 font-semibold text-xs" %>
+        <%= f.text_area :description, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
+      </div>
+    </div>
+    <button type="submit"> Next </button>
+  <% end %>
+</div>

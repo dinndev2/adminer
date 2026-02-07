@@ -22,6 +22,24 @@ class ServicesController < ApplicationController
     render layout: false
   end
 
+  def search
+    q = params[:q].to_s.strip
+    @services = if q.length >= 1
+      Service.where("name ILIKE ?", "%#{q}%")
+    else
+      Service.first
+    end
+
+    render json: @services.map do |service|
+      {
+        name: service.name,
+        desciption: service.description
+      }
+    end
+  end
+
+  private
+
   def service_params
     params.expect(service: [:name, :description])
   end

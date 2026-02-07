@@ -1,7 +1,0 @@
-Confirmation
-<%= render partial: "next_btn", locals: {path: user_onboarding_path(current_user, step)} %>
-
-
-<% if previous_step.present? %>
-  <%= link_to "Prev", wizard_path(previous_step) %>
-<% end %>

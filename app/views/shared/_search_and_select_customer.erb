@@ -1,0 +1,20 @@
+<% customer_has_error  = f.object.errors.full_messages_for(:customer).any? %>
+<div class="flex-1 space-y-1"> 
+  <div class="flex items-center justify-between">  
+    <%= f.label :customer_id, "Customer", class: "text-sm font-medium text-gray-900"  %>
+    <% if customer_has_error %>
+      <span class="text-xs font-medium text-red-600">
+        <%= f.object.errors.full_messages_for(:customer).first %>
+      </span>
+    <% end %>
+  </div>
+  <%= f.select :customer_id, (f.object.customer ? [[f.object.customer.name, f.object.customer.id]] : []),
+  { include_blank: true },
+  {
+    data: {
+      controller: "search",
+      search_url_value: search_customer_path
+    },
+  } %>
+  <p class="text-xs text-gray-500 mt-1">Who is this booking for?</p>
+</div>

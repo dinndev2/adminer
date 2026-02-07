@@ -1,6 +1,10 @@
 <%= form_with model: @user do |f| %>
   <div class="flex gap-2 my-5">  
-    <div> 
+    <div>
+      <div>
+        <%= f.label :role, class: "text-gray-600 font-semibold text-xs" %>
+        <%= f.select :role, User.roles.map { |l, _| [l.humanize, l] } %>
+      </div>
       <div class="flex gap-2 items-end">  
         <%= f.label :name, class: "text-gray-600 font-semibold text-xs" %>
         <% if user.errors.full_messages_for(:name).any? %>

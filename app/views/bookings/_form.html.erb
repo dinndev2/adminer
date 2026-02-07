@@ -1,81 +1,118 @@
-<%= form_with model: booking, class: "space-y-6", data: { controller: "form" } do |f| %>
+<%= form_with model: booking, class: "max-w-3xl", data: { controller: "form" } do |f| %>
+  <% name_has_error = booking.errors.full_messages_for(:name).any? %>
+  <% from_has_error = booking.errors.full_messages_for(:from).any? %>
+  <% to_has_error   = booking.errors.full_messages_for(:to).any? %>
 
-  <!-- Task name -->
-  <div> 
-    <% if booking.errors.full_messages_for(:name).any? %>  
-      <span class="text-red-500 text-xs"> <%= booking.errors.full_messages_for(:name).first %> </span> 
-    <% end %>
-    <%= f.text_field :name,
-      placeholder: "Booking Name",
-      class: "w-full text-lg font-bold border-2 border-gray-700 focus:outline-none border-none focus:ring-0 border-gray-400"
-    %>
-  </div>
-  <% if @members.present? %>  
-    <%= f.label :user_id, "Assigned To" %>
-    <%= f.select :user_id, @members.pluck(:name, :id) %>
-  <% else %>
-    <%= f.label :user_id, "Assigned To" %>
-    <%= f.select :user_id, [[current_user.name&.titleize, current_user.id]] %>
-  <% end %>
+  <% base_input =
+      "w-full rounded-lg bg-gray-50 border px-3 py-2 text-sm text-gray-900 " \
+      "placeholder:text-gray-400 outline-none transition " \
+      "focus:bg-white focus:ring-4 focus:ring-black/10 focus:border-gray-900" %>
 
+  <% input_ok    = "#{base_input} border-gray-200" %>
+  <% input_error = "#{base_input} border-red-300 focus:ring-red-500/10 focus:border-red-500" %>
 
-  <div class="flex gap-5">  
-    <div class="flex flex-col gap-2 flex-1">
-      <div class="flex gap-2 items-end">  
-        <%= f.label :from, class: "text-gray-600 font-semibold text-xs" %>
-        <% if booking.errors.full_messages_for(:from).any? %>
-          <span class="text-red-500 text-xs"> <%= booking.errors.full_messages_for(:from).first %> </span>
-        <% end %>
-      </div>
-      <%= f.date_field :from, onClick: "this.showPicker()", class: "rounded-lg focus:outline-none border border-gray-300 cursor-pointer p-2 w-full" %>
+  <div class="rounded-2xl bg-white">
+    <div class="border-b border-gray-100 pb-5">
+      <h2 class="text-base font-semibold text-gray-900 mt-2">Create booking</h2>
+      <p class="mt-1 text-sm text-gray-500 ">Fill in the details below to schedule a booking.</p>
     </div>
-    <div class="flex flex-col gap-2 flex-1">
-      <div class="flex gap-2 items-end">  
-        <%= f.label :to, class: "text-gray-600 font-semibold text-xs" %>
-        <% if booking.errors.full_messages_for(:to).any? %>
-          <span class="text-red-500 text-xs"> <%= booking.errors.full_messages_for(:to).first %> </span>
-        <% end %>  
-      </div>
-      <%= f.date_field :to, onClick: "this.showPicker()", class: "rounded-lg focus:outline-none border border-gray-300 cursor-pointer p-2 w-full" %>
-    </div>
-  </div>
 
-  <!-- Description -->
-  <div class="space-y-1">
-    <label for="booking_description" class="text-gray-600 font-semibold text-xs">Description</label>
-    <%= f.text_area :description,
-      rows: 4,
-      placeholder: "Add your description…",
-      class: "w-full rounded-md border-gray-300 p-3 text-sm text-gray-500 resize-none focus:outline-none border mt-1 border-gray-400"
-    %>
-  </div>
-  <button type="button" data-action="click->form#toggleVisibility" class="flex gap-2 text-blue-900 font-bold text-xs cursor-pointer"> 
-    Add Customer
-    <%= inline_svg_tag "plus.svg", class: "h-5 w-5" %>
-  </button>
-  <div data-form-target="toggleable" class="invisible-form">  
-    <%= f.fields_for :customer do |c| %>
-      <div class="space-y-6">  
-        <div class="flex gap-2">  
-          <div class="flex flex-col flex-1"> 
-            <%= c.label :name, class: "text-gray-600 font-semibold text-xs" %>
-            <%= c.text_field :name, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
-          </div>
-          <div class="flex flex-col flex-1"> 
-            <%= c.label :phone, class: "text-gray-600 font-semibold text-xs" %>
-            <%= c.text_field :phone, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
-          </div>
+    <div class="flex flex-col gap-2">
+      <!-- Booking Name -->
+      <div class="space-y-1 mt-2">
+        <div class="flex items-center justify-between">
+          <%= f.label :name, "Booking name", class: "text-sm font-medium text-gray-900" %>
+          <% if name_has_error %>
+            <span class="text-xs font-medium text-red-600">
+              <%= booking.errors.full_messages_for(:name).first %>
+            </span>
+          <% end %>
         </div>
-        <div class="flex flex-col"> 
-          <%= c.label :address, class: "text-gray-600 font-semibold text-xs" %>
-          <%= c.text_field :address, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
+
+        <%= f.text_field :name,
+          placeholder: "e.g. Villa reservation / Studio session",
+          class: (name_has_error ? input_error : input_ok) + " text-base font-semibold"
+        %>
+      </div>
+      <div class="space-y-1 flex-1">
+        <%= render partial: "shared/search_and_select_service", locals: { f: f, label: "What service is this for?", base_input: base_input } %>
+      </div>
+
+      <!-- Assigned To + Customer -->
+      <div class="flex gap-2">
+        <div class="space-y-1 flex-1">
+          <%= f.label :user_id, "Assigned to", class: "text-sm font-medium text-gray-900" %>
+
+          <%= f.select :user_id,
+            (@members.present? ? @members.pluck(:name, :id) : [[current_user.name&.titleize, current_user.id]]),
+            {},
+            class: input_ok + " bg-white"
+          %>
+
+          <p class="text-xs text-gray-500">Who is responsible for this booking?</p>
+        </div>
+
+        <div class="space-y-1 flex-1">
+          <%= render partial: "shared/search_and_select_customer", locals: { f: f, label: "Who is this booking for?", base_input: base_input } %>
         </div>
       </div>
-    <% end %>
+
+      <!-- Dates -->
+      <div class="flex gap-2">
+        <div class="space-y-1 flex-1">
+          <div class="flex items-center justify-between">
+            <%= f.label :from, "From", class: "text-sm font-medium text-gray-900" %>
+            <% if from_has_error %>
+              <span class="text-xs font-medium text-red-600">
+                <%= booking.errors.full_messages_for(:from).first %>
+              </span>
+            <% end %>
+          </div>
+
+          <%= f.date_field :from,
+            onClick: "this.showPicker()",
+            class: (from_has_error ? input_error : input_ok) + " cursor-pointer"
+          %>
+        </div>
+
+        <div class="space-y-1 flex-1">
+          <div class="flex items-center justify-between">
+            <%= f.label :to, "To", class: "text-sm font-medium text-gray-900" %>
+            <% if to_has_error %>
+              <span class="text-xs font-medium text-red-600">
+                <%= booking.errors.full_messages_for(:to).first %>
+              </span>
+            <% end %>
+          </div>
+
+          <%= f.date_field :to,
+            onClick: "this.showPicker()",
+            class: (to_has_error ? input_error : input_ok) + " cursor-pointer"
+          %>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div >
+        <%= f.label :description, "Description", class: "text-sm font-medium text-gray-900" %>
+
+        <%= f.text_area :description,
+          rows: 3,
+          placeholder: "Add notes, requirements, or anything staff should know…",
+          class: input_ok + " resize-none"
+        %>
+
+        <p class="text-xs text-gray-500">Optional. This appears on the booking detail view.</p>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-5 mt-2">
+      <button type="button" data-action="click->modal#close" class="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-900"> Cancel </button>
+
+      <button type="submit"
+        class="bg-black cursor-pointer text-white px-2 py-1 rounded text-sm hover:bg-gray-800 transition-all">
+        Create booking
+      </button>
+    </div>
   </div>
-
-  <button type="submit" class="text-white px-2 py-1 hover:bg-gray-800 transition-all rounded text-sm bg-black cursor-pointer">
-    Create Booking
-  </button> 
-
 <% end %>

@@ -1,0 +1,21 @@
+<% service_has_error  = f.object.errors.full_messages_for(:service).any? %>
+<div class="flex-1 space-y-2"> 
+  <div class="flex items-center justify-between">  
+    <%= f.label :serivce_id, "Service", class: "text-sm font-medium text-gray-900"  %>
+    <% if service_has_error %>
+      <span class="text-xs font-medium text-red-600">
+        <%= f.object.errors.full_messages_for(:service).first %>
+      </span>
+    <% end %>
+  </div>
+  <%= f.select :service_id, (f.object.service ? [[f.object.service.name, f.object.service.id]] : []),
+  { include_blank: true },
+  {
+    data: {
+      controller: "search",
+      search_url_value: search_services_path
+    },
+  } %>
+  <div id="select-service"> </div>
+  <p class="text-xs text-gray-500 mt-1"><%= label %></p>
+</div>

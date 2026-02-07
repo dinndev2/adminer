@@ -1,0 +1,7 @@
+Confirmation
+<%= render partial: "next_btn", locals: {path: onboarding_path(step)} %>
+
+
+<% if previous_step.present? %>
+  <%= link_to "Prev", wizard_path(previous_step) %>
+<% end %>

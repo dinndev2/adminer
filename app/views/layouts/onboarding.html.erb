@@ -24,9 +24,22 @@
 
   <body>
     <%= render partial: "shared/modal" %>
-    <div class="max-w-7xl flex mx-auto">
-      <%= render partial: "sidebar" %>  
-      <%= yield %>
+    <div class="min-h-screen bg-gray-50">
+      <div class="grid min-h-screen grid-cols-1 md:grid-cols-[380px_1fr]">
+        <!-- LEFT -->
+        <aside class="bg-white px-8 py-10">
+          <div class="sticky top-10">
+            <%= render partial: "sidebar", locals: { step: step, wizard_steps: wizard_steps } %>
+          </div>
+        </aside>
+
+        <!-- RIGHT -->
+        <main class="px-6 md:px-12 py-12">
+          <div class="mx-auto w-full max-w-3xl">
+            <%= yield %>
+          </div>
+        </main>
+      </div>
     </div>
   </body>
 </html>

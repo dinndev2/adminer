@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { invitations: 'users/invitations' }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -12,12 +12,20 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  resources :services
-  resources :bookings
-  resources :users do
-    resources :onboarding, controller: 'users/onboarding'
+  resources :services do
+    get :search, on: :collection
   end
 
+  resources :bookings do
+    patch :move, on: :member
+  end
+
+
+  resources :tenants
+  resources :onboarding
+  resources :users
+ 
+  get 'customers/search', to: "customers#search", as: :search_customer
   get 'settings', to: "users#index", as: :user_settings
   root "dashboard#home"
 end

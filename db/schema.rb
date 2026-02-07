@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_29_013529) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_07_032449) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,8 +50,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_29_013529) do
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
+    t.bigint "service_id"
     t.integer "status", default: 0
+    t.bigint "user_id"
+    t.bigint "customer_id"
+    t.integer "position"
+    t.index ["customer_id"], name: "index_bookings_on_customer_id"
+    t.index ["service_id"], name: "index_bookings_on_service_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
 
@@ -61,8 +66,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_29_013529) do
     t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "booking_id"
-    t.index ["booking_id"], name: "index_customers_on_booking_id"
+    t.string "email"
   end
 
   create_table "managements", force: :cascade do |t|
@@ -77,10 +81,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_29_013529) do
   create_table "services", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.bigint "price"
     t.bigint "booking_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "price", precision: 10, scale: 2
     t.index ["booking_id"], name: "index_services_on_booking_id"
   end
 
@@ -90,6 +94,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_29_013529) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "color"
+    t.string "website"
+    t.string "industry"
+    t.string "company_size"
+    t.index ["name"], name: "index_tenants_on_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -118,8 +126,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_29_013529) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bookings", "customers"
+  add_foreign_key "bookings", "services"
   add_foreign_key "bookings", "users"
-  add_foreign_key "customers", "bookings"
   add_foreign_key "managements", "users", column: "admin_id"
   add_foreign_key "managements", "users", column: "member_id"
   add_foreign_key "services", "bookings"

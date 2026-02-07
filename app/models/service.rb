@@ -1,5 +1,4 @@
 class Service < ApplicationRecord
-  belongs_to :booking, optional: true
-
+  has_many :bookings, dependent: :destroy
   validates :name, presence: true
 end
