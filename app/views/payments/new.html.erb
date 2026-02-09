@@ -1,0 +1,75 @@
+<%= turbo_frame_tag "modal-content" do %>
+  <div class="space-y-6">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-900">Subscription</h2>
+      <p class="mt-1 text-sm text-gray-500">Choose a plan that fits your team.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-5 shadow-sm">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-900">Free</p>
+            <p class="mt-1 text-sm text-slate-500">For getting started.</p>
+          </div>
+          <span class="text-sm font-semibold text-slate-900">$0</span>
+        </div>
+
+        <ul class="mt-4 space-y-2 text-sm text-slate-600">
+          <li class="flex items-center gap-2">
+            <span class="h-1.5 w-1.5 rounded-full bg-slate-300"></span>
+            1 business
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="h-1.5 w-1.5 rounded-full bg-slate-300"></span>
+            Basic bookings & services
+          </li>
+        </ul>
+
+        <div class="mt-5">
+          <% if !@tenant.supercharged? %>
+            <button type="button" class="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700">
+              Current plan
+            </button>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-400 via-blue-500 to-violet-500"></div>
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-900">Pro</p>
+            <p class="mt-1 text-sm text-slate-500">For growing teams.</p>
+          </div>
+          <span class="text-sm font-semibold text-slate-900">$1/mo</span>
+        </div>
+
+        <ul class="mt-4 space-y-2 text-sm text-slate-600">
+          <li class="flex items-center gap-2">
+            <span class="h-1.5 w-1.5 rounded-full bg-slate-300"></span>
+            Add more businesses
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="h-1.5 w-1.5 rounded-full bg-slate-300"></span>
+            Priority support
+          </li>
+        </ul>
+
+        <div class="mt-5">
+          <% if @tenant.supercharged? %>
+            <div class="w-full rounded-lg border flex gap-2 items-center justify-center border-blue-500/40 bg-gradient-to-r from-sky-400 via-blue-500 to-violet-500 px-4 py-2 text-sm font-semibold text-white">
+              <%= inline_svg_tag "charge.svg", class: "text-white h-5 w-5" %>
+              Supercharged
+            </div>
+            <span class="text-xs flex items-center justify-center mt-2 font-semibold w-full text-slate-600"> Current Plan </span>
+          <% else %>
+            <%= button_to payments_checkout_path(price_id: @pro_price_id), method: :post, data: { turbo: false }, class: "w-full rounded-lg border border-slate-900 bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800" do %>
+              Upgrade to Pro
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

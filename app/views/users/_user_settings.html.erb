@@ -1,0 +1,70 @@
+<div id="user-settings" class="relative mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900">Profile Settings</h2>
+      <p class="text-sm text-gray-500">Update your name, email, and avatar.</p>
+    </div>
+  </div>
+
+  <% if flash[:profile_saved].present? %>
+    <div
+      data-controller="flash"
+      data-flash-timeout-value="3000"
+      class="absolute right-4 top-4 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-xs text-emerald-800 shadow-sm transition-opacity"
+    >
+      <%= flash[:profile_saved] %>
+    </div>
+  <% end %>
+
+  <% input_base = "mt-2 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-100" %>
+
+  <%= form_with model: user, url: user_path(user), method: :patch,
+    data: { controller: "form" },
+    class: "mt-6 space-y-6" do |f| %>
+
+    <div class="flex items-center gap-6">
+      <%= f.file_field :avatar, class: "hidden",
+        data: { form_target: "fileInput", action: "change->form#preview" } %>
+
+      <button type="button"
+        data-action="click->form#triggerUpload"
+        class="group relative rounded-xl focus:outline-none focus:ring-4 focus:ring-gray-100">
+        <% avatar_url =
+            if user.avatar.attached?
+              url_for(user.avatar)
+            else
+              asset_path("user.png")
+            end
+          %>
+
+          <%= image_tag avatar_url,
+            class: "h-16 w-16 rounded-full object-cover border border-gray-200",
+            data: { form_target: "preview" }
+          %>
+        <span class="absolute inset-0 rounded-xl bg-black/0 group-hover:bg-black/5"></span>
+      </button>
+
+      <div>
+        <p class="text-sm font-semibold text-gray-800">Profile photo</p>
+        <p class="text-xs text-gray-500">Shown across the app</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= f.label :name, class: "text-sm font-medium text-gray-700" %>
+        <%= f.text_field :name, placeholder: "Your name", class: input_base %>
+      </div>
+
+      <div>
+        <%= f.label :email, class: "text-sm font-medium text-gray-700" %>
+        <%= f.email_field :email, placeholder: "you@example.com", class: input_base %>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+      <%= f.submit "Save profile",
+        class: "inline-flex items-center justify-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-100" %>
+    </div>
+  <% end %>
+</div>

@@ -19,8 +19,18 @@
       <button type="button"
         data-action="click->form#triggerUpload"
         class="group relative rounded-xl focus:outline-none focus:ring-4 focus:ring-gray-100">
-        <%= image_tag(@tenant.logo.attached? ? url_for(@tenant.logo) : "company.png",
-          class: "w-20 h-20 rounded-xl object-cover border border-gray-200") %>
+        <% logo_url =
+            if @tenant.persisted? && @tenant.logo.attached?
+              rails_blob_url(@tenant.logo, only_path: true)
+            else
+              asset_path("user.png")
+            end
+          %>
+
+          <%= image_tag logo_url,
+            class: "h-16 w-16 rounded-full object-cover",
+            data: { form_target: "preview" }
+          %>
         <span class="absolute inset-0 rounded-xl bg-black/0 group-hover:bg-black/5"></span>
       </button>
 
@@ -46,8 +56,8 @@
         <%= f.label :industry, class: "text-sm font-medium text-gray-700" %>
         <div class="relative">
           <%= f.select :industry,
-            ["Technology", "Finance", "Healthcare", "Education", "Other"],
-            { include_blank: "Select industry" },
+            ["Probject Based", "Booking Services", "Healthcare", "Education", "Other"],
+            { include_blank: "Select Business area" },
             class: "#{input_base} appearance-none pr-10" %>
           <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">▾</span>
         </div>

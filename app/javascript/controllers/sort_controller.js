@@ -19,17 +19,18 @@ export default class extends Controller {
 
   persist(evt) {
     const cardId = evt.item.dataset.id
+    const businessId = evt.item.dataset.biz
     const newColumn = evt.to.dataset.column // e.g. "booked", "in_progress"
     const newIndex = evt.newIndex
-    console.log(cardId)
-    fetch(`/bookings/${cardId}/move`, {
+    const from = evt.from.dataset.column
+    fetch(`/businesses/${businessId}/bookings/${cardId}/move`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content,
         "Accept": "text/vnd.turbo-stream.html"
       },
-      body: JSON.stringify({ column: newColumn, position: newIndex })
+      body: JSON.stringify({ column: newColumn, position: newIndex, prev_column: from })
     })
   }
 }

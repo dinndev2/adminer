@@ -1,11 +1,16 @@
 class BookingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_assignee_selection
+  before_action :set_business
   before_action :set_booking_data, only: :index
-
+  
    
   def new
     @booking = Booking.new
+  end
+
+  def show
+     @booking = Booking.find(params[:id])
   end
 
   def create
@@ -22,15 +27,19 @@ class BookingsController < ApplicationController
   end
 
   def move
-    @booking = Booking.find(params[:id])
-    column  = params[:column]
+    booking = Booking.find(params[:id])
+    @column  = params[:column]
+    @prev_column = params[:prev_column]
     index   = params[:position].to_i
+    
+    @updated_new_count = 2
+    @updated_prev_count = 4
 
     Booking.transaction do
-      booking.update!(status: column)
+      booking.update!(status: @column)
 
       # reindex that column based on current order excluding this booking
-      ids = Booking.where(status: column).where.not(id: booking.id).order(:position).pluck(:id)
+      ids = Booking.where(status: @column).where.not(id: booking.id).order(:position).pluck(:id)
 
       # insert at new index
       ids.insert(index, booking.id)
@@ -40,7 +49,9 @@ class BookingsController < ApplicationController
         Booking.where(id: id).update_all(position: i)
       end
     end
-    head :ok
+    respond_to do |f|
+      f.turbo_stream
+    end
   end
 
 
@@ -55,7 +66,8 @@ class BookingsController < ApplicationController
   end
 
   def set_booking_data
-    @bookings = current_user.admin? ? Booking.all : current_user.bookings 
+    @bookings = current_user.personalized_bookings(@business)
+
     @booking_columns = { 
       "created" => {title: "Created", bookings: @bookings.created},
       "not_finish" => {title: "Not Finish", bookings: @bookings.not_finish},
@@ -63,7 +75,11 @@ class BookingsController < ApplicationController
     }
   end
 
+  def set_business
+    @business = Business.find(params[:business_id])
+  end
+
   def booking_params
-    params.expect(booking: [:name, :description, :from, :to, :duration, :user_id, :customer_id, :service_id])
-  end 
+    params.expect(booking: [:name, :description, :from, :to, :duration, :user_id, :customer_id, :service_id, :business_id])
+  end  
 end

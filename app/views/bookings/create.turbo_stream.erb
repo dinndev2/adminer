@@ -1,7 +1,6 @@
-<%= turbo_stream.append("bookings") do %>  
-  <tr class="hover:bg-gray-50 transition animate-pulse text-green-600">
-    <%= render partial: "data", locals: {booking: @booking} %>
-  </tr>
-
+<%= turbo_stream.append("created") do %>  
+  <li class="item" data-id="<%= @booking.id %>">
+    <%= render partial: "booking", locals: {booking: @booking, status_key: "created"} %>
+  </li>
 <% end %>
 <%= turbo_stream.remove("empty-state") %>

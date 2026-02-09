@@ -6,7 +6,7 @@ class OnboardingController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user
 
-  steps :general, :company_setup, :confirmation
+  steps :general, :company_setup
 
   def show
     render_wizard
@@ -25,7 +25,7 @@ class OnboardingController < ApplicationController
       @tenant.assign_attributes(tenant_params)      
       if @tenant.save
         @user.update!(tenant: @tenant)    
-        redirect_to wizard_path(:confirmation)
+        redirect_to finish_wizard_path
       else
         render :company_setup, status: :unprocessable_entity
       end

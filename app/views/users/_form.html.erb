@@ -1,29 +1,58 @@
-<%= form_with model: @user do |f| %>
-  <div class="flex gap-2 my-5">  
-    <div>
-      <div>
-        <%= f.label :role, class: "text-gray-600 font-semibold text-xs" %>
-        <%= f.select :role, User.roles.map { |l, _| [l.humanize, l] } %>
-      </div>
-      <div class="flex gap-2 items-end">  
-        <%= f.label :name, class: "text-gray-600 font-semibold text-xs" %>
-        <% if user.errors.full_messages_for(:name).any? %>
-          <span class="text-red-500 text-xs"> <%= user.errors.full_messages_for(:name).first %> </span>
+<%= form_with model: @user, class: "space-y-6 mt-4" do |f| %>
+  <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+    <!-- Role -->
+    <div class="sm:col-span-1">
+      <%= f.label :role, class: "block text-xs font-semibold text-gray-600" %>
+      <%= f.select :role,
+        User.roles.keys.map { |r| [r.humanize, r] },
+        {},
+        class: "mt-2 block w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm focus:border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-100"
+      %>
+
+      <% if @user.errors[:role].any? %>
+        <p class="mt-2 text-xs text-red-600"><%= @user.errors.full_messages_for(:role).first %></p>
+      <% end %>
+    </div>
+
+    <!-- Name -->
+    <div class="sm:col-span-1">
+      <div class="flex items-end justify-between gap-2">
+        <%= f.label :name, class: "block text-xs font-semibold text-gray-600" %>
+        <% if @user.errors[:name].any? %>
+          <span class="text-xs text-red-600"><%= @user.errors.full_messages_for(:name).first %></span>
         <% end %>
       </div>
+
       <%= f.text_field :name,
-        class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2"
+        placeholder: "e.g. Din Penagunda",
+        class: [
+          "mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-4",
+          @user.errors[:name].any? ? "border border-red-300 focus:border-red-300 focus:ring-red-100" : "border border-gray-200 focus:border-gray-300 focus:ring-gray-100"
+        ].join(" ")
       %>
     </div>
-    <div class="flex flex-col flex-1"> 
-      <div class="flex gap-2 items-end">  
-        <%= f.label :email, class: "text-gray-600 font-semibold text-xs" %>
-        <% if user.errors.full_messages_for(:email).any? %>
-          <span class="text-red-500 text-xs"> <%= user.errors.full_messages_for(:email).first %> </span>
+
+    <!-- Email -->
+    <div class="sm:col-span-1">
+      <div class="flex items-end justify-between gap-2">
+        <%= f.label :email, class: "block text-xs font-semibold text-gray-600" %>
+        <% if @user.errors[:email].any? %>
+          <span class="text-xs text-red-600"><%= @user.errors.full_messages_for(:email).first %></span>
         <% end %>
       </div>
-      <%= f.text_field :email, class: "rounded-lg focus:outline-none border mt-1 border-gray-300 p-2" %>
+
+      <%= f.email_field :email,
+        placeholder: "name@company.com",
+        class: [
+          "mt-2 block w-full rounded-xl bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-4",
+          @user.errors[:email].any? ? "border border-red-300 focus:border-red-300 focus:ring-red-100" : "border border-gray-200 focus:border-gray-300 focus:ring-gray-100"
+        ].join(" ")
+      %>
     </div>
   </div>
-  <%= render partial: "shared/components/buttons/main", locals: {label: "Invite User"} %>
+
+  <div class="flex items-center justify-end gap-3 pt-2">
+    <%= render partial: "shared/components/buttons/main",
+      locals: { label: "Invite User" } %>
+  </div>
 <% end %>

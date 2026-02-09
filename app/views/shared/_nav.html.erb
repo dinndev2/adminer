@@ -1,14 +1,39 @@
-<div class="flex items-center justify-between px-10 py-3 bg-gray-50 border-b-2 border-gray-100">
-  <%= link_to root_path, class: "text-2xl font-bold" do %>
-    <%= title %>
-  <% end %>
-  <div class="flex items-end flex-col">  
-    <p class="text-sm"> <%= current_user.email %> </p>
-    <div class="flex gap-2 text-xs mt-1">  
-      <span class=" text-gray-400"> <%= displayable_position(current_user) %> </span>
-      <%= button_to destroy_user_session_path, method: :delete, class: "flex gap-2 cursor-pointer" do %>
-        <span class="border-l-2 border-gray-900 pl-2"> Logout </span>
-      <% end %> 
+<div class="border-b border-gray-100 bg-white">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3 min-w-0">
+      <% if current_user&.avatar&.attached? %>
+        <%= image_tag current_user.avatar, class: "h-9 w-9 rounded-full object-cover border border-gray-200" %>
+      <% else %>
+        <div class="h-9 w-9 rounded-full bg-gray-900 text-white text-xs font-semibold flex items-center justify-center">
+          <%= (current_user&.name.presence || current_user&.email || "?").to_s.first(1).upcase %>
+        </div>
+      <% end %>
+      <div class="min-w-0">
+        <p class="text-sm font-semibold text-gray-900 truncate">
+          <%= current_user&.name.presence || current_user&.email %>
+        </p>
+        <p class="text-xs text-gray-500 truncate"><%= current_user&.email %></p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <%= link_to subscription_path,
+        data: { controller: "modal", turbo_frame: "modal-content" },
+        class: [
+          "inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-xs font-semibold transition",
+          @tenant&.supercharged? ?
+            "bg-gradient-to-r from-sky-400 via-blue-500 to-violet-500 text-white shadow-sm ring-1 ring-inset ring-white/30 hover:brightness-105" :
+            "border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-100"
+        ].join(" ") do %>
+        <% if @tenant&.supercharged? %>
+          <%= inline_svg_tag "charge.svg", class: "w-4 h-4 mr-2" %>
+          Supercharged
+        <% else %>
+          Subscription
+        <% end %>
+      <% end %>
+      <%= link_to "Edit profile", user_settings_path(current_user),
+        class: "inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-100" %>
     </div>
   </div>
 </div>

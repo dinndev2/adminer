@@ -1,12 +1,18 @@
-<div class="flex gap-3">  
-  <div class="bg-gray-50 w-64 p-5 rounded-lg border-gray-100 border-2 col-span-1">
-    <%= render partial: "shared/header", locals: {heading: "Settings", svg: nil} %>
-    <%= render partial: "settings/nav" %>
-  </div>
+<div class="mx-auto max-w-6xl px-4 py-6 space-y-1">
   <div class="w-full">
     <%= turbo_frame_tag "settings-content" do %>
-      <%= render partial: "shared/components/buttons/link", locals: {path: new_user_path, label: "Create User", svg: nil} %>
-      <div class="overflow-x-auto bg-white rounded-xl mt-4 shadow-sm border border-gray-200">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="text-xl font-semibold text-gray-900">Settings</h1>
+          </div>
+          <p class="mt-1 text-sm text-gray-500">Manage your team members and roles.</p>
+        </div>
+
+        <%= render partial: "shared/components/buttons/link", locals: {path: new_user_path, label: "Create User", svg: nil} %>
+      </div>
+
+      <div class="overflow-x-auto bg-white rounded-xl mt-6 shadow-sm border border-gray-200">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -33,6 +39,10 @@
           </tbody>
         </table>
       </div>
+
+      <%= render partial: "user_settings", locals: {user: current_user} %>
+      <%= render partial: "tenants/tenant_settings", locals: {tenant: current_user.tenant} %>
+      
     <% end %>
   </div> 
 </div>

@@ -1,22 +1,38 @@
-<h2><%= t "devise.invitations.edit.header" %></h2>
-
-<%= form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :invitation_token, readonly: true %>
-
-  <% if f.object.class.require_password_on_accepting %>
-    <div class="field">
-      <%= f.label :password %><br />
-      <%= f.password_field :password %>
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div class="space-y-1">
+      <h1 class="text-lg font-semibold text-gray-900"><%= t "devise.invitations.edit.header" %></h1>
+      <p class="text-sm text-gray-500">Set your password to activate your account.</p>
     </div>
 
-    <div class="field">
-      <%= f.label :password_confirmation %><br />
-      <%= f.password_field :password_confirmation %>
+    <div class="mt-4">
+      <%= render "users/shared/error_messages", resource: resource %>
     </div>
-  <% end %>
 
-  <div class="actions">
-    <%= f.submit t("devise.invitations.edit.submit_button") %>
+    <%= form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put, class: "mt-4 space-y-4" }) do |f| %>
+      <% base_input =
+          "w-full rounded-lg bg-gray-50 border px-3 py-2 text-sm text-gray-900 " \
+          "placeholder:text-gray-400 outline-none transition " \
+          "focus:bg-white focus:ring-4 focus:ring-black/10 focus:border-gray-900" %>
+
+      <%= f.hidden_field :invitation_token, readonly: true %>
+
+      <% if f.object.class.require_password_on_accepting %>
+        <div class="space-y-2">
+          <%= f.label :password, class: "text-sm font-medium text-gray-900" %>
+          <%= f.password_field :password, class: "#{base_input} border-gray-200", autocomplete: "new-password", placeholder: "Create a password" %>
+        </div>
+
+        <div class="space-y-2">
+          <%= f.label :password_confirmation, class: "text-sm font-medium text-gray-900" %>
+          <%= f.password_field :password_confirmation, class: "#{base_input} border-gray-200", autocomplete: "new-password", placeholder: "Confirm password" %>
+        </div>
+      <% end %>
+
+      <div class="pt-2">
+        <%= f.submit t("devise.invitations.edit.submit_button"),
+          class: "inline-flex w-full items-center justify-center rounded-lg border border-gray-900 bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black/10" %>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>

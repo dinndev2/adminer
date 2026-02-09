@@ -11,7 +11,7 @@
   class: "relative pb-28" do |f| %>
 
   <!-- CONTENT (no container) -->
-  <div class="space-y-8 max-w-5xl">
+  <div class="space-y-8 max-w-3xl">
     <!-- Avatar -->
     <div class="flex items-center gap-6">
       <%= f.file_field :avatar, class: "hidden",
@@ -21,6 +21,7 @@
         data-action="click->form#triggerUpload"
         class="group relative rounded-full focus:outline-none focus:ring-4 focus:ring-gray-100">
         <%= image_tag(@user.avatar.attached? ? url_for(@user.avatar) : "user.png",
+          "data-form-target": "preview",
           class: "w-20 h-20 rounded-full object-cover border border-gray-200") %>
         <span class="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/5"></span>
       </button>
@@ -48,7 +49,7 @@
 
   <!-- STICKY FOOTER ACTIONS -->
   <div class="fixed left-0 right-0 bottom-0 md:left-[380px] border-gray-200 backdrop-blur">
-    <div class="mx-auto max-w-4xl px-6 md:px-12 py-4 flex justify-end">
+    <div class="mx-auto max-w-3xl px-6 md:px-12 py-4 flex justify-end">
       <%= f.submit "Next",
         class: "inline-flex items-center justify-center rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-100" %>
     </div>

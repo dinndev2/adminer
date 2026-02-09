@@ -56,22 +56,24 @@ group :development do
   gem "web-console"
   gem "letter_opener"
   gem "rails-erd"
+  gem "pry", "~> 0.16.0"
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "rspec-rails"
+  gem "rails-controller-testing"
 end
 
 gem "devise", "~> 4.9"
-
 gem "tailwindcss-rails", "~> 4.4"
-
 gem "inline_svg", "~> 1.10"
-
-gem "pry", "~> 0.16.0"
-
 gem 'devise_invitable', '~> 2.0.0'
 gem 'wicked'
+gem 'dotenv'
+gem 'stripe'
 
+
+gem "factory_bot_rails", "~> 6.5"

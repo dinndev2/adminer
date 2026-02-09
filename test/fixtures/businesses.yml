@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tenant: one
+  location: MyString
+  name: MyString
+  description: MyString
+
+two:
+  tenant: two
+  location: MyString
+  name: MyString
+  description: MyString

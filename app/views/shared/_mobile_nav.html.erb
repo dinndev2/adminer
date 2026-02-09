@@ -1,0 +1,44 @@
+<div data-controller="drawer" class="lg:hidden">
+  <div class="flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4">
+    <button type="button" data-action="drawer#open" class="rounded-lg p-2 hover:bg-gray-100">
+      ☰
+    </button>
+    <p class="text-sm font-semibold text-gray-900"> <%= @tenant.name %> </p>
+    <div class="w-10"></div>
+  </div>
+
+  <div data-drawer-target="panel" class="hidden fixed inset-0 z-50">
+    <div data-action="click->drawer#close" class="absolute inset-0 bg-black/40"></div>
+
+    <div class="relative h-full w-72 bg-white shadow-xl">
+      <div class="flex h-16 items-center justify-between px-4 border-b border-gray-200">
+        <p class="text-sm font-semibold text-gray-900">Menu</p>
+        <button type="button" data-action="drawer#close" class="rounded-lg p-2 hover:bg-gray-100">✕</button>
+      </div>
+
+      <div class="p-4 space-y-6">
+        <div class="space-y-1">
+          <% @businesses.each do |business| %>  
+            <% nav_items(business).each do |item| %>
+              <% active = nav_active?(item) %>
+              <%= link_to item.path, class: nav_item_classes(active) do %>
+                <%= inline_svg_tag "#{item.icon}.svg", class: nav_icon_classes(active) %>
+                <span class="truncate"><%= item.label %></span>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <div class="space-y-1">
+          <% settings_items.each do |item| %>
+            <% active = nav_active?(item) %>
+            <%= link_to item.path, class: nav_item_classes(active) do %>
+              <%= inline_svg_tag "#{item.icon}.svg", class: nav_icon_classes(active) %>
+              <span class="truncate"><%= item.label %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

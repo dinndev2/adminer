@@ -70,6 +70,31 @@
   display: none
 }
 
+/* Subtle scrollbar styling for in-card lists */
+.scrollbar-subtle {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.scrollbar-subtle::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-subtle::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-subtle::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.scrollbar-subtle:hover::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;
+}
+
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -112,7 +137,6 @@
 
 /* apply to a selected tile */
 .cal-pop { animation: calPop 220ms ease-out; }
-
 
 
 

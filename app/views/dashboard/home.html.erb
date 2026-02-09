@@ -1,5 +1,83 @@
-<% if current_user.present? %>
-  hi <%= current_user.email %>
-<% else %>
-  <%= link_to "Login", new_user_session_path %>
-<% end %>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  <!-- Header -->
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
+      <p class="mt-1 text-sm text-gray-600">
+        Quick view of what’s happening with bookings this week.
+      </p>
+    </div>
+
+
+
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+      <p class="text-sm font-medium text-gray-600">Today’s bookings</p>
+      <p class="mt-2 text-3xl font-semibold text-gray-900"><%= @todays_bookings.count %></p>
+      <p class="mt-1 text-xs text-gray-500"><%= Date.current.strftime("%b %d, %Y") %></p>
+    </div>
+
+    <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+      <p class="text-sm font-medium text-gray-600">This week</p>
+      <p class="mt-2 text-3xl font-semibold text-gray-900"><%= @this_week_bookings.count %></p>
+      <p class="mt-1 text-xs text-gray-500">
+        <%= Date.current.beginning_of_week.strftime("%b %d") %> – <%= Date.current.end_of_week.strftime("%b %d") %>
+      </p>
+    </div>
+
+    <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+      <p class="text-sm font-medium text-gray-600">In progress</p>
+      <p class="mt-2 text-3xl font-semibold text-gray-900"><%= @in_progress_bookings.count %></p>
+      <p class="mt-1 text-xs text-gray-500">Status: In progress</p>
+    </div>
+
+    <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+      <p class="text-sm font-medium text-gray-600">Ending this week</p>
+      <p class="mt-2 text-3xl font-semibold text-gray-900"><%= @ending_this_week.count %></p>
+      <p class="mt-1 text-xs text-gray-500">Not finished</p>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <!-- Upcoming / Today list -->
+    <div  class="lg:col-span-2 space-y-4 flex flex-col gap-4">   
+      <%= render partial: "bookings/sorted_bookings", locals: {bookings: @todays_bookings, label: "Today", status: "created"} %>
+      <%= render partial: "bookings/sorted_bookings", locals: {bookings: @this_week_bookings, label: "This Week", status: "not_finish"} %>
+      <%= render partial: "bookings/sorted_bookings", locals: {bookings: @ending_this_week, label: "Ending This Week", status: "finished"} %>
+    </div>
+    <!-- Right column: Needs attention -->
+    <div class="space-y-4 row-span-3">
+      <h2 class="text-lg font-semibold text-gray-900">Needs attention</h2>
+
+      <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-medium text-gray-700">New bookings</p>
+          <span class="text-sm font-semibold text-gray-900"><%= @new_bookings.count %></span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-medium text-gray-700">In progress</p>
+          <span class="text-sm font-semibold text-gray-900"><%= @in_progress_bookings.count %></span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-medium text-gray-700">Finished</p>
+          <span class="text-sm font-semibold text-gray-900"><%= @finished_bookings.count %></span>
+        </div>
+
+        <div class="h-px bg-gray-100"></div>
+
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-medium text-gray-700">Ending this week</p>
+          <span class="text-sm font-semibold text-gray-900"><%= @ending_this_week.count %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

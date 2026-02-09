@@ -23,7 +23,10 @@ class UserInvitation
     result = self.prepare    
     if result.success?
       @user.invite!(@admin)
-      Management.find_or_create_by(member: @user, admin: @admin) # find or create
+      User.transaction do
+        Management.find_or_create_by(member: @user, admin: @admin)
+        @user.update!(tenant: @admin.tenant)
+      end
     end
     result
   end

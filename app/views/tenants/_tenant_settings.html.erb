@@ -1,0 +1,105 @@
+<% if current_user.admin? %>
+  <div id="tenant_settings" class="relative mt-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">Company Settings</h2>
+        <p class="text-sm text-gray-500">Update your company details and branding.</p>
+      </div>
+    </div>
+
+    <% if flash[:company_saved].present? %>
+      <div
+        data-controller="flash"
+        data-flash-timeout-value="3000"
+        class="absolute right-4 top-4 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-xs text-emerald-800 shadow-sm transition-opacity"
+      >
+        <%= flash[:company_saved] %>
+      </div>
+    <% end %>
+
+    <% if current_user.tenant.present? %>
+      <% input_base = "mt-2 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-100" %>
+
+      <%= form_with model: current_user.tenant, url: tenant_path(current_user.tenant), method: :patch,
+        data: { controller: "form" },
+        class: "mt-6 space-y-6" do |f| %>
+
+        <div class="flex items-center gap-6">
+          <%= f.file_field :logo, class: "hidden",
+            data: { form_target: "fileInput", action: "change->form#preview" } %>
+
+          <button type="button"
+            data-action="click->form#triggerUpload"
+            class="group relative rounded-xl focus:outline-none focus:ring-4 focus:ring-gray-100">
+            <% logo_url =
+                if current_user.tenant.logo.attached?
+                  url_for(current_user.tenant.logo)
+                else
+                  asset_path("user.png")
+                end
+              %>
+
+              <%= image_tag logo_url,
+                class: "h-16 w-16 rounded-full object-cover border border-gray-200",
+                data: { form_target: "preview" }
+              %>
+            <span class="absolute inset-0 rounded-xl bg-black/0 group-hover:bg-black/5"></span>
+          </button>
+
+          <div>
+            <p class="text-sm font-semibold text-gray-800">Company logo</p>
+            <p class="text-xs text-gray-500">Shown across the app</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= f.label :name, class: "text-sm font-medium text-gray-700" %>
+            <%= f.text_field :name, placeholder: "Company name", class: input_base %>
+          </div>
+
+          <div>
+            <%= f.label :website, class: "text-sm font-medium text-gray-700" %>
+            <%= f.url_field :website, placeholder: "https://example.com", class: input_base %>
+          </div>
+
+          <div>
+            <%= f.label :industry, class: "text-sm font-medium text-gray-700" %>
+            <div class="relative">
+              <%= f.select :industry,
+                ["Probject Based", "Booking Services", "Healthcare", "Education", "Other"],
+                { include_blank: "Select Business area" },
+                class: "#{input_base} appearance-none pr-10" %>
+              <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">▾</span>
+            </div>
+          </div>
+
+          <div>
+            <%= f.label :company_size, class: "text-sm font-medium text-gray-700" %>
+            <div class="relative">
+              <%= f.select :company_size,
+                ["1-5", "6-20", "21-50", "51-200", "200+"],
+                { include_blank: "Select size" },
+                class: "#{input_base} appearance-none pr-10" %>
+              <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">▾</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :description, class: "text-sm font-medium text-gray-700" %>
+          <%= f.text_area :description, rows: 4,
+            placeholder: "Short description of your company…",
+            class: "#{input_base} resize-y" %>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+          <%= f.submit "Save changes",
+            class: "inline-flex items-center justify-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-100" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="mt-4 text-sm text-gray-500">No company found for your account.</p>
+    <% end %>
+  </div>
+<% end %>

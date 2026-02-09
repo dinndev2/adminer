@@ -10,22 +10,31 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  match "/404", to: "errors#not_found", via: :all
+
   # Defines the root path route ("/")
   # root "posts#index"
-  resources :services do
-    get :search, on: :collection
-  end
-
-  resources :bookings do
-    patch :move, on: :member
-  end
 
 
   resources :tenants
   resources :onboarding
   resources :users
- 
+  resources :businesses do
+    resources :services do
+      get :search, on: :collection
+    end
+  
+    resources :bookings do
+      patch :move, on: :member 
+    end  
+  end
+  
+  get 'subscription', to: "payments#new", as: :subscription
+  post 'payments/checkout', to: "payments#checkout"
+  get 'payments/success', to: "payments#success" 
+  get 'payments/cancel', to: "payments#cancel"
   get 'customers/search', to: "customers#search", as: :search_customer
   get 'settings', to: "users#index", as: :user_settings
+  post "/webhooks/stripe", to: "webhooks/stripe#create"
   root "dashboard#home"
 end

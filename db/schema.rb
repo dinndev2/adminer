@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_07_032449) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_09_005106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -55,9 +55,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_07_032449) do
     t.bigint "user_id"
     t.bigint "customer_id"
     t.integer "position"
+    t.bigint "business_id"
+    t.index ["business_id"], name: "index_bookings_on_business_id"
     t.index ["customer_id"], name: "index_bookings_on_customer_id"
     t.index ["service_id"], name: "index_bookings_on_service_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "businesses", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.string "location"
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_businesses_on_tenant_id"
   end
 
   create_table "customers", force: :cascade do |t|
@@ -85,7 +97,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_07_032449) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "price", precision: 10, scale: 2
+    t.bigint "business_id"
     t.index ["booking_id"], name: "index_services_on_booking_id"
+    t.index ["business_id"], name: "index_services_on_business_id"
   end
 
   create_table "tenants", force: :cascade do |t|
@@ -97,6 +111,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_07_032449) do
     t.string "website"
     t.string "industry"
     t.string "company_size"
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.string "stripe_subscription_status"
+    t.datetime "stripe_current_period_end"
+    t.integer "tier", default: 0
     t.index ["name"], name: "index_tenants_on_name", unique: true
   end
 
@@ -126,11 +145,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_07_032449) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bookings", "businesses"
   add_foreign_key "bookings", "customers"
   add_foreign_key "bookings", "services"
   add_foreign_key "bookings", "users"
+  add_foreign_key "businesses", "tenants"
   add_foreign_key "managements", "users", column: "admin_id"
   add_foreign_key "managements", "users", column: "member_id"
   add_foreign_key "services", "bookings"
+  add_foreign_key "services", "businesses"
   add_foreign_key "users", "tenants"
 end
