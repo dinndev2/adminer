@@ -3,4 +3,5 @@ class Business < ApplicationRecord
 
   has_many :services, dependent: :destroy
   has_many :bookings, dependent: :destroy
-end
+  has_many :admins, through: :tenant
+end 
