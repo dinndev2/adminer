@@ -7,7 +7,13 @@ class ServicesController < ApplicationController
 
     if @service.save
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.append("services", @service) }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.remove("services-empty"),
+            turbo_stream.append("services", @service)
+          ]
+        end
+        format.html { redirect_to business_services_path(@business) }
       end
     else
       render :new, status: :unprocessable_entity
@@ -34,7 +40,7 @@ class ServicesController < ApplicationController
     @services = if q.length >= 1
       s.where("name ILIKE ?", "%#{q}%")
     else
-      s.first
+      s.limit(20)
     end
 
     render json: @services.map do |service|

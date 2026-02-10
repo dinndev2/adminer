@@ -1,2 +1,15 @@
-<%= turbo_stream.update("count-#{@column}", @updated_new_count) %>
-<%= turbo_stream.update("count-#{@prev_column}", @updated_prev_count) %>
+<% columns_to_update.each do |col| %>
+  <% styles = status_style(col) %>
+  <%= turbo_stream.replace "count-#{col}" do %>
+    <span
+      id="count-<%= col %>"
+      class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset <%= styles[:pill] %>"
+    >
+      <%= column_counts[col] %>
+    </span>
+  <% end %>
+
+  <%= turbo_stream.update col do %>
+    <%= render partial: "bookings/column_items", locals: { bookings: column_bookings[col], status_key: col } %>
+  <% end %>
+<% end %>

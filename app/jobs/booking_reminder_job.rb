@@ -8,4 +8,5 @@ class BookingReminderJob < ApplicationJob
 
     BookingMailer.with(booking_id: booking.id).customer_reminder
   end
+
 end

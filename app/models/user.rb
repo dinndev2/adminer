@@ -31,5 +31,14 @@ class User < ApplicationRecord
       bookings.where(business_id: business.id) 
     end
   end
+
+  def sorted_booking(bookings)
+    s = { 
+      "created" => {title: "Created", bookings: bookings.created },
+      "not_finish" => {title: "Not Finish", bookings: bookings.not_finish },
+      "finished" => {title: "Finished", bookings: bookings.finished }
+    }
+    s
+  end
 end
 

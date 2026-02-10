@@ -1,6 +1,7 @@
 class Booking < ApplicationRecord
   belongs_to :customer
   belongs_to :assigned_to, class_name: "User", foreign_key: :user_id, optional: true
+  belongs_to :creator, class_name: "User", foreign_key: :creator_id, optional: true
   belongs_to :service
   belongs_to :business
 
@@ -26,6 +27,20 @@ class Booking < ApplicationRecord
   }
 
   before_create :set_position
+
+  after_create_commit -> {
+    [creator_id, user_id].compact.uniq.each do |broadcast_to_id|
+      broadcast_append_to(
+        [business, "bookings", broadcast_to_id],
+        partial: "bookings/booking_item",
+        locals: { booking: self, status_key: "created" },
+        target: "created"
+      )
+      broadcast_remove_to([business, "bookings", broadcast_to_id], target: "empty-state")
+    end
+  }
+
+
 
   private
 

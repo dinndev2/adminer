@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-6xl px-4 py-6 space-y-6">
+<div class="mx-auto max-w-7xl px-5 py-6 space-y-6">
   <div class="flex items-start justify-between gap-4">
     <div>
       <div class="flex flex-wrap items-center gap-2">
@@ -15,17 +15,18 @@
       locals: { path: new_business_service_path(@business), label: "Create Service", svg: nil } %>
   </div>
 
-  <% if @services.present? %>
-    <div id="services" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  <div id="services" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <% if @services.present? %>
       <%= render @services %>
-    </div>
-  <% else %>
-    <div class="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
-      No services yet.
-      <div class="mt-3">
-        <%= render partial: "shared/components/buttons/link",
-          locals: { path: new_business_service_path(@business), label: "Create your first service", svg: nil } %>
+    <% else %>
+      <div id="services-empty" class="col-span-full rounded-xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
+        <%= image_tag "empty_state.jpeg", alt: "No services yet", class: "mx-auto mb-4 h-32 w-auto opacity-90" %>
+        No services yet.
+        <div class="mt-3">
+          <%= render partial: "shared/components/buttons/link",
+            locals: { path: new_business_service_path(@business), label: "Create your first service", svg: nil } %>
+        </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

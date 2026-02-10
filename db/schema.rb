@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_09_005106) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_10_042421) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -56,7 +56,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_005106) do
     t.bigint "customer_id"
     t.integer "position"
     t.bigint "business_id"
+    t.bigint "creator_id"
     t.index ["business_id"], name: "index_bookings_on_business_id"
+    t.index ["creator_id"], name: "index_bookings_on_creator_id"
     t.index ["customer_id"], name: "index_bookings_on_customer_id"
     t.index ["service_id"], name: "index_bookings_on_service_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
@@ -149,6 +151,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_005106) do
   add_foreign_key "bookings", "customers"
   add_foreign_key "bookings", "services"
   add_foreign_key "bookings", "users"
+  add_foreign_key "bookings", "users", column: "creator_id"
   add_foreign_key "businesses", "tenants"
   add_foreign_key "managements", "users", column: "admin_id"
   add_foreign_key "managements", "users", column: "member_id"

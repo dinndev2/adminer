@@ -1,77 +1,96 @@
-<% styles = status_style(status_key) %>
+<% local_assigns[:status_key] %>
+<% styles = status_style(local_assigns.has_key?(:status_key) ? status_key : booking.status) %>
+<% status_label =
+    case booking.status
+    when "created"    then "Created"
+    when "not_finish" then "In progress"
+    when "finished"   then "Finished"
+    else booking.status.to_s.humanize
+    end
+  %>
+<% status_pill = status_style(booking.status)[:pill] %>
 
-<%= link_to business_booking_path(booking.business, booking), data: {turbo_frame: "modal-content", controller: "modal"} do %>
-  <div class="group cursor-pointer relative overflow-hidden rounded-xl border bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md <%= styles[:card] %>">
-    <!-- left accent -->
-    
-    <div class="p-4 pl-5">
-      <!-- top -->
-      <div class="flex items-start justify-between gap-3">
-        <div class="flex items-center gap-2 flex-wrap">
-          <% if booking.assigned_to.avatar.attached? %>
-            <%= render partial: "shared/profile_sm", locals: {path: url_for(booking.assigned_to.avatar)} %>
-          <% end %>
 
-          <% if booking.business.present? %>
-            <span class="inline-flex gap-2 items-center rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-700 ring-1 ring-inset ring-gray-200">
-              <%= inline_svg_tag "briefcase.svg", class: "h-4 w-4" %>
-              <span class="truncate max-w-[120px]"><%= booking.business.name %></span>
-            </span>
-          <% end %>
+<li class="item" id="booking-item-<%= booking.id %>" data-biz="<%= booking.business_id %>" data-id="<%= booking.id %>">
+  <%= link_to business_booking_path(booking.business, booking), data: {turbo_frame: "modal-content", controller: "modal"} do %>
+    <div class="group cursor-grab relative overflow-hidden rounded-xl border bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md <%= styles[:card] %>">
+      <!-- left accent -->
+      
+      <div class="p-4 pl-5">
+        <!-- top -->
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-2 flex-wrap">
+            <% if booking.assigned_to&.avatar&.attached? %>
+              <%= render partial: "shared/profile_sm", locals: {path: url_for(booking.assigned_to.avatar)} %>
+            <% end %>
 
-          <% if booking.service.present? %>
-            <span class="inline-flex gap-2 items-center rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-700 ring-1 ring-inset ring-gray-200">
-              <%= inline_svg_tag "tag.svg", class: "h-4 w-4" %>
-              <span>
-                <%= booking.service.name.to_s.titleize %>
-                <% if booking.service.price.present? %>
-                  <span class="text-gray-500">· <%= number_to_currency(booking.service.price) %></span>
-                <% end %>
+            <% if booking.business.present? %>
+              <span class="inline-flex gap-2 items-center rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-700 ring-1 ring-inset ring-gray-200">
+                <%= inline_svg_tag "briefcase.svg", class: "h-4 w-4" %>
+                <span class="truncate max-w-[120px]"><%= booking.business.name %></span>
               </span>
+            <% end %>
+
+            <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset <%= status_pill %>">
+              <%= status_label %>
             </span>
+
+
+
+            <% if booking.service.present? %>
+              <span class="inline-flex gap-2 items-center rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-700 ring-1 ring-inset ring-gray-200">
+                <%= inline_svg_tag "tag.svg", class: "h-4 w-4" %>
+                <span>
+                  <%= booking.service.name.to_s.titleize %>
+                  <% if booking.service.price.present? %>
+                    <span class="text-gray-500">· <%= number_to_currency(booking.service.price) %></span>
+                  <% end %>
+                </span>
+              </span>
+            <% end %>
+
+      
+          </div>
+          <button type="button" data-drag-handle
+            class="rounded-md px-2 py-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 cursor-grab">
+            ⋮⋮
+          </button>
+        </div>
+
+        <!-- content -->
+        <div class="mt-3 space-y-1">
+          <h3 class="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
+            <%= booking.name %>
+          </h3>
+
+          <% if booking.description.present? %>
+            <p class="text-sm text-gray-600 leading-relaxed line-clamp-2">
+              <%= booking.description %>
+            </p>
+          <% else %>
+            <p class="text-sm text-gray-400 italic">No description</p>
           <% end %>
-
-    
-        </div>
-        <button type="button" data-drag-handle
-          class="rounded-md px-2 py-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 cursor-grab">
-          ⋮⋮
-        </button>
-      </div>
-
-      <!-- content -->
-      <div class="mt-3 space-y-1">
-        <h3 class="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
-          <%= booking.name %>
-        </h3>
-
-        <% if booking.description.present? %>
-          <p class="text-sm text-gray-600 leading-relaxed line-clamp-2">
-            <%= booking.description %>
-          </p>
-        <% else %>
-          <p class="text-sm text-gray-400 italic">No description</p>
-        <% end %>
-      </div>
-
-      <!-- footer -->
-      <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-600">
-        <div class="flex items-center gap-1.5">
-          <%= inline_svg_tag "calendar.svg", class: "h-4 w-4 text-red-700" %>
-          <span class="font-medium text-gray-700"><%= booking_date(booking) %></span>
         </div>
 
-        <div class="flex items-center gap-1.5">
-          <span class="h-1.5 w-1.5 rounded-full bg-gray-300"></span>
-          <span>
-            <span class="text-gray-500">Customer:</span>
-            <span class="font-medium text-gray-800"><%= booking.customer.name %></span>
-          </span>
+        <!-- footer -->
+        <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-600">
+          <div class="flex items-center gap-1.5">
+            <%= inline_svg_tag "calendar.svg", class: "h-4 w-4 text-red-700" %>
+            <span class="font-medium text-gray-700"><%= booking_date(booking) %></span>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <span class="h-1.5 w-1.5 rounded-full bg-gray-300"></span>
+            <span>
+              <span class="text-gray-500">Customer:</span>
+              <span class="font-medium text-gray-800"><%= booking.customer.name %></span>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- hover ring -->
-    <div class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent group-hover:ring-gray-300"></div>
-  </div> 
-<% end %>
+      <!-- hover ring -->
+      <div class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent group-hover:ring-gray-300"></div>
+    </div> 
+  <% end %>
+</li>

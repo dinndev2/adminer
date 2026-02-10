@@ -1,0 +1,7 @@
+<div id="board" data-controller="sort" class="mt-6">
+  <div class="flex gap-2 overflow-x-auto pb-4 lg:grid lg:grid-cols-3 lg:gap-2 lg:overflow-visible">
+    <% booking_columns.each do |key, col| %>
+      <%= render partial: "column", locals: {key: key, col: col} %>
+    <% end %>
+  </div>
+</div>

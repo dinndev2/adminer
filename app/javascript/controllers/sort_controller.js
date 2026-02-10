@@ -5,7 +5,6 @@ export default class extends Controller {
   static targets = ["column"]
 
   connect() {
-    console.log(Sortable)
     this.columnTargets.forEach((col) => {
       Sortable.create(col, {
         group: "kanban",        // allow cross-column moves
@@ -32,5 +31,11 @@ export default class extends Controller {
       },
       body: JSON.stringify({ column: newColumn, position: newIndex, prev_column: from })
     })
+      .then((response) => response.text())
+      .then((html) => {
+        if (html && window.Turbo) {
+          window.Turbo.renderStreamMessage(html)
+        }
+      })
   }
 }

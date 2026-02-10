@@ -1,6 +1,1 @@
-<%= turbo_stream.append("created") do %>  
-  <li class="item" data-id="<%= @booking.id %>">
-    <%= render partial: "booking", locals: {booking: @booking, status_key: "created"} %>
-  </li>
-<% end %>
 <%= turbo_stream.remove("empty-state") %>
