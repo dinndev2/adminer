@@ -51,5 +51,6 @@ class Booking < ApplicationRecord
   def set_position
     self.position ||= (Booking.where(status: status).maximum(:position) || -1) + 1
   end
+
 end
  

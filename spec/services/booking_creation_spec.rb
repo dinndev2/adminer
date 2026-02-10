@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe BookingCreation do
+RSpec.describe BookingService do
 
   describe '#set' do
     it 'saves booking and triggers notification' do
