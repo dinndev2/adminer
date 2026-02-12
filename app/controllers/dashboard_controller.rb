@@ -4,7 +4,7 @@ class DashboardController < ApplicationController
   
   def home
     @bookings = current_user.admin? ? @tenant.bookings : current_user.bookings
-
+    @bookings.active
     @in_progress_bookings = @bookings.not_finish
     @finished_bookings    = @bookings.finished
     @new_bookings         = @bookings.created

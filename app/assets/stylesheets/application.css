@@ -9,6 +9,10 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
+html {
+  scroll-behavior: smooth;
+}
+
 .object-cover {
   object-fit: cover;
  }

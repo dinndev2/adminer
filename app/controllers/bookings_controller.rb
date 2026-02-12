@@ -38,7 +38,6 @@ class BookingsController < ApplicationController
       f.turbo_stream { render "bookings/move", locals: broadcast_move }
       f.html { head :ok }
     end
-    
   end
 
 
@@ -62,19 +61,6 @@ class BookingsController < ApplicationController
   end
 
   def booking_params
-    params.expect(booking: [:name, :description, :from, :to, :duration, :creator_id, :user_id, :customer_id, :service_id, :business_id])
+    params.expect(booking: [:recurring_type, :recurring, :name, :description, :from, :to, :duration, :creator_id, :user_id, :customer_id, :service_id, :business_id])
   end  
-
-  def move_locals_for(user, columns_to_update)
-    scoped_bookings = user.personalized_bookings(@business)
-    column_bookings = columns_to_update.index_with do |col|
-      scoped_bookings.where(status: col).order(:position)
-    end
-
-    {
-      columns_to_update: columns_to_update,
-      column_bookings: column_bookings,
-      column_counts: column_bookings.transform_values(&:size)
-    }
-  end
 end

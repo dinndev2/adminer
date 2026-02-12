@@ -14,31 +14,31 @@
 
   <!-- KPI Cards -->
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <a href="#today" class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       <p class="text-sm font-medium text-gray-600">Today’s bookings</p>
       <p class="mt-2 text-3xl font-semibold text-gray-900"><%= @todays_bookings.count %></p>
       <p class="mt-1 text-xs text-gray-500"><%= Date.current.strftime("%b %d, %Y") %></p>
-    </div>
+    </a>
 
-    <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <a href="#not_finish" class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       <p class="text-sm font-medium text-gray-600">This week</p>
       <p class="mt-2 text-3xl font-semibold text-gray-900"><%= @this_week_bookings.count %></p>
       <p class="mt-1 text-xs text-gray-500">
         <%= Date.current.beginning_of_week.strftime("%b %d") %> – <%= Date.current.end_of_week.strftime("%b %d") %>
       </p>
-    </div>
+    </a>
 
-    <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <a href="#finished" class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       <p class="text-sm font-medium text-gray-600">In progress</p>
       <p class="mt-2 text-3xl font-semibold text-gray-900"><%= @in_progress_bookings.count %></p>
       <p class="mt-1 text-xs text-gray-500">Status: In progress</p>
-    </div>
+    </a>
 
-    <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <a href="#finished" class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       <p class="text-sm font-medium text-gray-600">Ending this week</p>
       <p class="mt-2 text-3xl font-semibold text-gray-900"><%= @ending_this_week.count %></p>
       <p class="mt-1 text-xs text-gray-500">Not finished</p>
-    </div>
+    </a>
   </div>
 
   <!-- Main layout -->

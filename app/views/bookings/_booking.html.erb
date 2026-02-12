@@ -1,5 +1,5 @@
 <% local_assigns[:status_key] %>
-<% styles = status_style(local_assigns.has_key?(:status_key) ? status_key : booking.status) %>
+<% styles = status_style(booking.status) %>
 <% status_label =
     case booking.status
     when "created"    then "Created"

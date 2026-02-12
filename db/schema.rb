@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_10_042421) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_11_030734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -57,6 +57,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_10_042421) do
     t.integer "position"
     t.bigint "business_id"
     t.bigint "creator_id"
+    t.datetime "archived_at"
+    t.boolean "recurring", default: false
+    t.integer "recurring_type", default: 0
     t.index ["business_id"], name: "index_bookings_on_business_id"
     t.index ["creator_id"], name: "index_bookings_on_creator_id"
     t.index ["customer_id"], name: "index_bookings_on_customer_id"

@@ -8,6 +8,11 @@ export default class extends Controller {
     this.toggleableTarget.classList.toggle('invisible-form')
   }
 
+  showOnError(e) {
+    if (e.detail?.success) return
+    this.toggleableTarget.classList.remove('invisible-form')
+  }
+
   triggerUpload() {
     this.fileInputTarget.click()
   }

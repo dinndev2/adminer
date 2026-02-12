@@ -48,7 +48,7 @@
           <%= f.select :user_id,
             (@members.present? ? @members.pluck(:name, :id) : [[current_user.name&.titleize, current_user.id]]),
             {},
-            class: input_ok + " bg-white"
+            class: (from_has_error ? input_error : input_ok) + " cursor-pointer"
           %>
 
           <p class="text-xs text-gray-500">Who is responsible for this booking?</p>
@@ -77,6 +77,7 @@
           %>
         </div>
 
+
         <div class="space-y-1 flex-1">
           <div class="flex items-center justify-between">
             <%= f.label :to, "To", class: "text-sm font-medium text-gray-900" %>
@@ -91,6 +92,32 @@
             onClick: "this.showPicker()",
             class: (to_has_error ? input_error : input_ok) + " cursor-pointer"
           %>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <div class="space-y-1 flex-1">
+          <div class="flex items-center justify-between">
+            <%= f.label :recurring, "Recurring", class: "text-sm font-medium text-gray-900" %>
+            <% if from_has_error %>
+              <span class="text-xs font-medium text-red-600">
+                <%= booking.errors.full_messages_for(:recurring).first %>
+              </span>
+            <% end %>
+          </div>
+
+          <%= f.select :recurring, [["Yest", true], ["No", false]], {}, class: (from_has_error ? input_error : input_ok) + " cursor-pointer" %>
+        </div>
+        <div class="space-y-1 flex-1">
+          <div class="flex items-center justify-between">
+            <%= f.label :recurring_type,  class: "text-sm font-medium text-gray-900" %>
+            <% if from_has_error %>
+              <span class="text-xs font-medium text-red-600">
+                <%= booking.errors.full_messages_for(:recurring_type).first %>
+              </span>
+            <% end %>
+          </div>
+
+          <%= f.select :recurring, Booking.recurring_types.keys.map { |r| [r.humanize, r] }, {}, class: (from_has_error ? input_error : input_ok) + " cursor-pointer" %>
         </div>
       </div>
 

@@ -4,8 +4,8 @@ class BookingNotification
   end
 
   def booked!
-    BookingMailer.with(booking_id: @booking.id).customer_confirmation.deliver_now
-    if self.more_than_five_days_away?
+    BookingMailer.with(booking_id: @booking.id).customer_confirmation
+    if more_than_five_days_away?
       BookingReminderJob.set(wait_until: @booking.to.in_time_zone - 3.days).perform_later(@booking.id)
     end
     if @booking.assigned_to

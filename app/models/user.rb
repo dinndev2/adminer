@@ -21,11 +21,12 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   def invited_by_tenant
-    invited_by.tenant
+    invited_by&.tenant
   end
 
   def personalized_bookings(business) 
-    if admin? 
+    return Booking.none unless business
+    scoped = if admin? 
       business.bookings
     else
       bookings.where(business_id: business.id) 

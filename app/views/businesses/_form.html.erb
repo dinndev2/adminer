@@ -1,0 +1,19 @@
+<div id="business-form">
+  <% form_classes = business.errors.any? ? "" : "invisible-form" %>
+  <%= form_with model: business,
+    class: form_classes,
+    data: { form_target: "toggleable", action: "turbo:submit-end->form#showOnError" } do |f| %>
+    <div class="flex gap-2 w-full">
+      <%= f.hidden_field :tenant_id, value: @tenant.id  %>
+      <div class="flex-col relative">  
+        <% if f.object.errors.present? %>
+          <span class="text-xs text-red-500 mb-1 absolute top-9"> <%= f.object.errors.full_messages.first %> </span>
+        <% end %>
+        <%= f.text_field :name, class: "font-semibold rounded-md border flex-1 border-gray-200 focus:outline-none px-2.5 py-2 text-gray-800 text-xs bg-gray-50", placeholder: "Add your new business name" %>
+      </div>
+      <button class="rounded-md cursor-pointer bg-gray-900 px-2 text-white hover:bg-gray-800" type="submit">
+        <%= inline_svg_tag "s-plus.svg", class: "h-4 w-4" %>
+      </button>
+    </div>
+  <% end %>
+</div>

@@ -7,6 +7,7 @@ class Booking < ApplicationRecord
 
   validates :name, :from, :to, :user_id, presence: true
   enum :status, [:created, :not_finish, :finished]
+  enum :recurring_type, [:monthly, :weekly, :daily]
 
   scope :created,    -> { where(status: :created).order(:position, :updated_at) }
   scope :not_finish, -> { where(status: :not_finish).order(:position, :updated_at) }
@@ -20,6 +21,9 @@ class Booking < ApplicationRecord
     range = Date.current.beginning_of_week..Date.current.end_of_week
     where(from: range).or(where(to: range))
   }
+
+  scope :active, -> { where.not(archived_at: nil) }
+  scope :archived, -> { where(archived_at: nil) }
 
   scope :ending_this_week, -> {
     range = Date.current.beginning_of_week..Date.current.end_of_week
@@ -40,8 +44,6 @@ class Booking < ApplicationRecord
     end
   }
 
-
-
   private
 
   def customer_blank?(attrs)
@@ -51,6 +53,5 @@ class Booking < ApplicationRecord
   def set_position
     self.position ||= (Booking.where(status: status).maximum(:position) || -1) + 1
   end
-
 end
  
