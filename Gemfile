@@ -67,7 +67,7 @@ group :test do
   gem "rails-controller-testing"
 end
 
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
 gem "tailwindcss-rails", "~> 4.4"
 gem "inline_svg", "~> 1.10"
 gem 'devise_invitable', '~> 2.0.0'
