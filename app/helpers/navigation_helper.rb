@@ -1,10 +1,11 @@
 module NavigationHelper
   NavItem = Struct.new(:label, :path, :icon, :starts_with, keyword_init: true)
 
-  def nav_items(booking)
+  def nav_items(business)
     [
-      NavItem.new(label: "Bookings",  path: business_bookings_path(booking),     icon: :calendar, starts_with: "/businesses/#{booking.id}/bookings"),
-      NavItem.new(label: "Services",  path: business_services_path(booking),     icon: :tag,      starts_with: "/businesses/#{booking.id}/services"),
+      NavItem.new(label: "Information", path: business_path(business),         icon: :briefcase, starts_with: "/businesses/#{business.id}"),
+      NavItem.new(label: "Bookings",    path: business_bookings_path(business), icon: :calendar,  starts_with: "/businesses/#{business.id}/bookings"),
+      NavItem.new(label: "Services",    path: business_services_path(business), icon: :tag,       starts_with: "/businesses/#{business.id}/services"),
     ]
   end
 
@@ -18,11 +19,13 @@ module NavigationHelper
     ]
   end
 
-  def nav_active?(item)
-    # root_path should only be active on exact "/"
+
+  def nav_active?(item, exact: false)
+    return request.path == item.path if exact
     return request.path == "/" if item.path == root_path
     request.path.start_with?(item.starts_with)
   end
+  
 
   def nav_item_classes(active)
     base = "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition"

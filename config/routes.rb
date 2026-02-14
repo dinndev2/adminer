@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :onboarding
   resources :users
   resources :businesses do
+    get :display_scraped_data, on: :collection
     resources :services do
       get :search, on: :collection
     end
