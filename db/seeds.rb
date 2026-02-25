@@ -9,26 +9,43 @@ raise "No Tenant found. Create a tenant first." unless tenant
 businesses_data = [
   {
     name: "Skyline Bowling & Lounge",
+    website: "https://www.bowlero.com",
     location: "BGC, Taguig City",
     description: "Modern bowling lanes with lounge seating, snacks, and weekend events."
   },
   {
     name: "Harbor Wellness Studio",
+    website: "https://www.massageenvy.com",
     location: "Cebu IT Park, Cebu City",
     description: "Wellness studio offering massage, body therapy, and guided recovery sessions."
   },
   {
     name: "Palm & Pine Event Space",
+    website: "https://www.peerspace.com",
     location: "Makati City",
     description: "Private event space for birthdays, corporate nights, and intimate celebrations."
   }
 ]
 
 businesses = businesses_data.map do |attrs|
-  Business.find_or_create_by!(tenant_id: tenant.id, name: attrs[:name]) do |b|
-    b.location = attrs[:location]
-    b.description = attrs[:description]
+  business = Business.find_or_initialize_by(tenant_id: tenant.id, name: attrs[:name])
+  business.website = attrs[:website]
+  business.location = attrs[:location] if Business.column_names.include?("location")
+  business.description = attrs[:description]
+
+  if business.website.present?
+    scraped = Webscraper.new(business.website).call
+    business.description = scraped[:description] if scraped[:description].present?
   end
+
+  business.save!
+
+  if business.website.present?
+    scraped ||= Webscraper.new(business.website).call
+    FileAttachment.new(scraped[:logo], business).call if scraped[:logo].present?
+  end
+
+  business
 end
 
 # -------------------------
