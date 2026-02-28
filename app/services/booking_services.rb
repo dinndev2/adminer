@@ -42,10 +42,6 @@ class BookingServices
 
   def set
     result = self.prepare
-    # send booking confirmations to customer and assignee
-    if result.success?
-      BookingNotification.new(@booking).booked!
-    end
     result
   end
 

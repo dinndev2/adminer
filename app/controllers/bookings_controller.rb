@@ -18,8 +18,8 @@ class BookingsController < ApplicationController
     result = BookingServices.new(@booking).set
     if result.success?
       respond_to do |format|
-        format.html { redirect_to bookings_path, status: :ok }
         format.turbo_stream
+        format.html { redirect_to business_bookings_path(@business), status: :ok }
       end
     else
       render :new, status: :unprocessable_entity
@@ -32,11 +32,12 @@ class BookingsController < ApplicationController
     @prev_column = params[:prev_column]
     index   = params[:position].to_i
     columns_to_update = [@column, @prev_column].uniq
-    broadcast_move = BookingServices.new(@booking, columns_to_update, @current_user, index, @tenant.admin_ids).broadcast
+    broadcast_move = BookingServices.new(@booking, columns_to_update, current_user, index, @tenant.admin_ids).broadcast
         
     respond_to do |f|
       f.turbo_stream { render "bookings/move", locals: broadcast_move }
-      f.html { head :ok }
+      f.html { redirect_to business_bookings_path(@business) }
+
     end
   end
 
