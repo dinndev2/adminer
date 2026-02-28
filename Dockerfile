@@ -1,17 +1,9 @@
 # syntax=docker/dockerfile:1
 # check=error=true
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t adminer .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name adminer adminer
-
-# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
-
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.2.2
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
-# Rails app lives here
 WORKDIR /rails
 
 # Install base packages
@@ -23,7 +15,10 @@ RUN apt-get update -qq && \
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_WITHOUT="development:test" \
+    RAILS_LOG_TO_STDOUT="1" \
+    RAILS_SERVE_STATIC_FILES="1" \
+    PORT="8080"
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
@@ -45,11 +40,11 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
-
-
-
+# Precompile assets for production.
+# Rails loads initializers here, so provide dummy values for any ENV.fetch(...) secrets used at boot.
+RUN SECRET_KEY_BASE_DUMMY=1 \
+    STRIPE_SECRET_KEY=dummy \
+    ./bin/rails assets:precompile
 
 # Final stage for app image
 FROM base
@@ -64,9 +59,10 @@ RUN groupadd --system --gid 1000 rails && \
     chown -R rails:rails db log storage tmp
 USER 1000:1000
 
-# Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Start server via Thruster by default, this can be overwritten at runtime
-EXPOSE 80
-CMD ["./bin/thrust", "./bin/rails", "server"]
+# Fly expects 8080 (matches your fly.toml internal_port)
+EXPOSE 8080
+
+# Ensure we bind correctly inside Fly (0.0.0.0) and use PORT=8080
+CMD ["./bin/thrust", "./bin/rails", "server", "-b", "0.0.0.0", "-p", "8080"]
