@@ -47,6 +47,7 @@ class BookingServices
 
   def broadcast
     move_to_next_column
+    current_user_locals = @current_user ? move_locals_for(@current_user) : {}
   
     broadcast_user_ids = [@booking.creator_id, @booking.user_id, @admin_ids].flatten
     users_by_id = User.where(id: broadcast_user_ids.compact.uniq).index_by(&:id)
@@ -57,16 +58,19 @@ class BookingServices
       next unless user
   
       stream = "business:#{@business.id}:bookings:#{user.id}"
-  
-      Turbo::StreamsChannel.broadcast_render_to(
-        stream,
-        template: "bookings/move",
-        locals: move_locals_for(user)
-      )
+
+      begin
+        Turbo::StreamsChannel.broadcast_render_to(
+          stream,
+          template: "bookings/move",
+          locals: move_locals_for(user)
+        )
+      rescue StandardError => e
+        Rails.logger.error("Booking move broadcast failed for #{stream}: #{e.class} #{e.message}")
+      end
     end
-  
-    return move_locals_for(@current_user) if @current_user
-    {}
+
+    current_user_locals
   end
 
   private
