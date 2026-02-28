@@ -1,7 +1,5 @@
 class BusinessesController < ApplicationController
 
-  before_action :check_if_supercharged, only: :create
-
   def create 
     @business = Business.new(business_params)
     data = Webscraper.new(business_params[:website]).call
