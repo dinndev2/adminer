@@ -20,7 +20,8 @@
       <button type="button"
         data-action="click->form#triggerUpload"
         class="group relative rounded-full focus:outline-none focus:ring-4 focus:ring-gray-100">
-        <%= image_tag(@user.avatar.attached? ? url_for(@user.avatar) : "user.png",
+        <%= image_tag(@user.avatar.attached? ? url_for(@user.avatar) : "avatar-fallback.svg",
+          fallback: "avatar-fallback.svg",
           "data-form-target": "preview",
           class: "w-20 h-20 rounded-full object-cover border border-gray-200") %>
         <span class="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/5"></span>

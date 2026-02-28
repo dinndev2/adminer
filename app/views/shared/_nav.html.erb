@@ -2,7 +2,7 @@
   <div class="mx-auto max-w-7xl px-4 sm:px-5 py-3.5 flex items-center justify-between">
     <div class="flex items-center gap-3 min-w-0">
       <% if current_user&.avatar&.attached? %>
-        <%= image_tag current_user.avatar, class: "h-9 w-9 rounded-full object-cover border border-gray-200" %>
+        <%= image_tag current_user.avatar, fallback: "avatar-fallback.svg", class: "h-9 w-9 rounded-full object-cover border border-gray-200" %>
       <% else %>
         <div class="h-9 w-9 rounded-full bg-gray-900 text-white text-xs font-semibold flex items-center justify-center">
           <%= (current_user&.name.presence || current_user&.email || "?").to_s.first(1).upcase %>

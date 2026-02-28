@@ -35,11 +35,12 @@
                 if current_user.tenant.logo.attached?
                   url_for(current_user.tenant.logo)
                 else
-                  asset_path("user.png")
+                  asset_path("image-fallback.svg")
                 end
               %>
 
               <%= image_tag logo_url,
+                fallback: "image-fallback.svg",
                 class: "h-16 w-16 rounded-full object-cover border border-gray-200",
                 data: { form_target: "preview" }
               %>
