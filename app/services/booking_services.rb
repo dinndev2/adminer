@@ -47,19 +47,24 @@ class BookingServices
 
   def broadcast
     move_to_next_column
+  
     broadcast_user_ids = [@booking.creator_id, @booking.user_id, @admin_ids].flatten
-    users_by_id = User.where(id: broadcast_user_ids.compact.uniq).index_by(&:id)    
-    broadcast_user_ids.each do |user_id|
+    users_by_id = User.where(id: broadcast_user_ids.compact.uniq).index_by(&:id)
+  
+    broadcast_user_ids.compact.uniq.each do |user_id|
       next if @current_user && user_id == @current_user.id
       user = users_by_id[user_id]
       next unless user
-
+  
+      stream = "business:#{@business.id}:bookings:#{user.id}"
+  
       Turbo::StreamsChannel.broadcast_render_to(
-        [@business, "bookings", user.id],
+        stream,
         template: "bookings/move",
         locals: move_locals_for(user)
       )
     end
+  
     return move_locals_for(@current_user) if @current_user
     {}
   end
