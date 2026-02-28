@@ -33,16 +33,19 @@ class Booking < ApplicationRecord
   before_create :set_position
 
   after_create_commit -> {
-    [creator_id, user_id].compact.uniq.each do |broadcast_to_id|
-      broadcast_append_to(
-        [business, "bookings", broadcast_to_id],
-        partial: "bookings/booking_item",
-        locals: { booking: self, status_key: "created" },
-        target: "created"
-      )
-      broadcast_remove_to([business, "bookings", broadcast_to_id], target: "empty-state")
-    end
-  }
+  [creator_id, user_id].compact.uniq.each do |broadcast_to_id|
+    stream = "business:#{business_id}:bookings:#{broadcast_to_id}"
+
+    broadcast_append_to(
+      stream,
+      partial: "bookings/booking_item",
+      locals: { booking: self, status_key: "created" },
+      target: "created"
+    )
+
+    broadcast_remove_to(stream, target: "empty-state")
+  end
+}
 
   private
 

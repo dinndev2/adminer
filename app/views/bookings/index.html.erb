@@ -15,7 +15,6 @@
         locals: { path: new_business_booking_path(@business), label: "Create Booking", svg: nil } %>
     </div>
 
-
-  <%= turbo_stream_from [@business, "bookings", current_user.id] %>
+  <%= turbo_stream_from "business:#{@business.id}:bookings:#{current_user.id}" %>
   <%= render partial: "board", locals: {booking_columns: @booking_columns} %>
 </div>
