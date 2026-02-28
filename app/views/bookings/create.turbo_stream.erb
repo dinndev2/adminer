@@ -1,1 +1,14 @@
 <%= turbo_stream.remove("empty-state") %>
+<%= turbo_stream.append "created" do %>
+  <%= render partial: "bookings/booking_item", locals: { booking: @booking, status_key: "created" } %>
+<% end %>
+
+<% styles = status_style("created") %>
+<%= turbo_stream.replace "count-created" do %>
+  <span
+    id="count-created"
+    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset <%= styles[:pill] %>"
+  >
+    <%= current_user.personalized_bookings(@business).created.count %>
+  </span>
+<% end %>
