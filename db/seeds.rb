@@ -1,6 +1,8 @@
 # db/seeds.rb
 
-tenant = Tenant.first
+tenant = Tenant.create(name: "Tamara V Workspace", description: "This is a demo", tier: 0)
+
+User.create(name: "Tamara V", role: 0, tenant: tenant, password: "tamarademouser", password_confirmation: "tamarademouser")
 raise "No Tenant found. Create a tenant first." unless tenant
 
 # -------------------------
