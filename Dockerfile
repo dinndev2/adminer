@@ -31,8 +31,10 @@ RUN bundle install && \
 COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
+# Add DATABASE_URL so config/database.yml's ENV.fetch("DATABASE_URL") won't crash during assets:precompile
 RUN SECRET_KEY_BASE_DUMMY=1 \
     STRIPE_SECRET_KEY=dummy \
+    DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres \
     ./bin/rails assets:precompile
 
 FROM base
