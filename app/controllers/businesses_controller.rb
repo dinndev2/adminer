@@ -1,7 +1,6 @@
 class BusinessesController < ApplicationController
 
   before_action :check_if_supercharged, only: :create
-  before_action :admin_accessible
 
   def create 
     @business = Business.new(business_params)
