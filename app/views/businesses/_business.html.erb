@@ -1,6 +1,6 @@
 <% business_items = nav_items(business) %>
 <% business_active = business_items.any? { |item| nav_active?(item) } %>
-<div data-controller="collapse" class="space-y-2">
+<div data-controller="collapse" data-nav-group class="space-y-2">
   <div class="flex items-center justify-between rounded-md px-2.5 py-1.5 hover:bg-gray-50">
     <%= link_to business_path(business),
       class: "text-xs font-semibold text-gray-700 truncate flex-1 block -my-1.5 py-1.5 -ml-2.5 pl-2.5" do %>
@@ -23,8 +23,8 @@
   >
     <% business_items.each do |item| %>
       <% active = nav_active?(item, exact: item.label == 'Information') %>
-      <%= link_to item.path, class: nav_item_classes(active) do %>
-        <%= inline_svg_tag "#{item.icon}.svg", class: nav_icon_classes(active) %>
+      <%= link_to item.path, class: nav_item_classes(active), data: nav_link_data(item, exact: item.label == "Information") do %>
+        <%= inline_svg_tag "#{item.icon}.svg", class: nav_icon_classes(active), data: nav_icon_data %>
         <span class="truncate"><%= item.label %></span>
       <% end %>
     <% end %>

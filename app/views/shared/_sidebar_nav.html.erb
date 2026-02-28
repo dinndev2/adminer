@@ -1,4 +1,9 @@
-<aside class="hidden lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-gray-200 lg:bg-white">
+<aside
+  id="sidebar-nav-<%= navigation_version_key %>"
+  data-controller="navigation"
+  data-turbo-permanent
+  class="hidden lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-gray-200 lg:bg-white"
+>
   <div class="flex h-16 items-center px-6 border-b border-gray-100">
     <div class="flex items-center gap-2">
       <% if current_user.tenant.logo.attached? %>
@@ -15,8 +20,8 @@
 
   <nav class="flex-1 px-4 py-6 shadow-sm space-y-6">
     <% active = nav_active?(dashboard_item) %>
-    <%= link_to root_path, class: nav_item_classes(active) do %>
-      <%= inline_svg_tag "home.svg", class: nav_icon_classes(active) %>
+    <%= link_to root_path, class: nav_item_classes(active), data: nav_link_data(dashboard_item) do %>
+      <%= inline_svg_tag "home.svg", class: nav_icon_classes(active), data: nav_icon_data %>
       Home
     <% end %>
     <div class="space-y-1">
@@ -30,8 +35,8 @@
       <div class="mt-3 space-y-1.5">
         <% settings_items.each do |item| %>
           <% active = nav_active?(item) %>
-          <%= link_to item.path, class: nav_item_classes(active) do %>
-            <%= inline_svg_tag "#{item.icon}.svg", class: nav_icon_classes(active) %>
+          <%= link_to item.path, class: nav_item_classes(active), data: nav_link_data(item) do %>
+            <%= inline_svg_tag "#{item.icon}.svg", class: nav_icon_classes(active), data: nav_icon_data %>
             <span class="truncate"><%= item.label %></span>
           <% end %>
         <% end %>

@@ -1,4 +1,8 @@
-<div class="border-b border-gray-100 bg-white">
+<div
+  id="top-nav-<%= top_nav_version_key %>"
+  data-turbo-permanent
+  class="border-b border-gray-100 bg-white"
+>
   <div class="mx-auto max-w-7xl px-4 sm:px-5 py-3.5 flex items-center justify-between">
     <div class="flex items-center gap-3 min-w-0">
       <% if current_user&.avatar&.attached? %>

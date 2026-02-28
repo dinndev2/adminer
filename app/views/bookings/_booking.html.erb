@@ -12,7 +12,7 @@
 
 
 <li class="item" id="booking-item-<%= booking.id %>" data-biz="<%= booking.business_id %>" data-id="<%= booking.id %>">
-  <%= link_to business_booking_path(booking.business, booking), data: {turbo_frame: "modal-content", controller: "modal"} do %>
+  <%= link_to business_booking_path(booking.business, booking), data: { turbo_frame: "modal-content", controller: "modal", turbo_prefetch: false } do %>
     <div class="group cursor-grab relative overflow-hidden rounded-xl border bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md <%= styles[:card] %>">
       <!-- left accent -->
       

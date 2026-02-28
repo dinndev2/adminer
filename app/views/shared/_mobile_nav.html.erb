@@ -1,4 +1,9 @@
-<div data-controller="drawer" class="lg:hidden">
+<div
+  id="mobile-nav-<%= navigation_version_key %>"
+  data-controller="drawer navigation"
+  data-turbo-permanent
+  class="lg:hidden"
+>
   <div class="flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4">
     <button type="button" data-action="drawer#open" class="rounded-lg p-2 hover:bg-gray-100">
       ☰
@@ -18,8 +23,8 @@
 
       <div class="h-[calc(100%-4rem)] overflow-y-auto p-4 space-y-6">
         <% active = nav_active?(dashboard_item) %>
-        <%= link_to root_path, class: nav_item_classes(active) do %>
-          <%= inline_svg_tag "home.svg", class: nav_icon_classes(active) %>
+        <%= link_to root_path, class: nav_item_classes(active), data: nav_link_data(dashboard_item) do %>
+          <%= inline_svg_tag "home.svg", class: nav_icon_classes(active), data: nav_icon_data %>
           Home
         <% end %>
 
@@ -36,8 +41,8 @@
           <div class="space-y-1.5">
             <% settings_items.each do |item| %>
               <% active = nav_active?(item) %>
-              <%= link_to item.path, class: nav_item_classes(active) do %>
-                <%= inline_svg_tag "#{item.icon}.svg", class: nav_icon_classes(active) %>
+              <%= link_to item.path, class: nav_item_classes(active), data: nav_link_data(item) do %>
+                <%= inline_svg_tag "#{item.icon}.svg", class: nav_icon_classes(active), data: nav_icon_data %>
                 <span class="truncate"><%= item.label %></span>
               <% end %>
             <% end %>
