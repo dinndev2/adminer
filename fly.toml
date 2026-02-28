@@ -1,13 +1,14 @@
-# fly.toml app configuration file generated for adminer-a6da2q on 2026-02-28T01:10:32Z
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
 app = 'adminer-a6da2q'
 primary_region = 'iad'
 console_command = '/rails/bin/rails console'
 
 [build]
+  dockerfile = "Dockerfile"
+
+[env]
+  THRUSTER_HTTP_PORT = "8080"
+  HTTP_PORT = "8080"
+  PORT = "8080"
 
 [http_service]
   internal_port = 8080
