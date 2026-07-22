@@ -1,0 +1,28 @@
+# developerz.ai maintainer policy — dinndev2/adminer (QA / dogfood target).
+#
+# The GitHub App is installed on this repo; committing this file to the default
+# branch activates the maintainer loops (triage → converse → hand coding to the
+# user's agent → PR watch → release). Everything left unset rides the schema's
+# safe defaults (packages/policy/src/defaults.ts). The deliberate choices:
+#
+# - auto_merge: fleet doctrine — the gate is machines (CI green + review verdict
+#   + branch protections), not a human. This repo is PUBLIC, so setting it
+#   explicitly is the required opt-in (the free-OSS tier gate forces it OFF when
+#   left unset). Set to false for a human-merge-only lane while shaking the loop out.
+# - human_merge: CI/release plumbing and this policy file itself stay human-merged
+#   even with auto_merge on — a bad workflow or policy edit must never self-merge.
+# - review: no .coderabbit.yaml here, so the native reviewer runs on its defaults
+#   (no bot-on-bot deferral needed).
+# - ci.public_repos stays OFF (default): a public repo won't place CI jobs on
+#   fleet hardware until a maintainer opts in; the triage/PR/release loops don't
+#   need it. Flip ci.public_repos: true later to exercise CI-on-fleet.
+# - handoff rides the default `none` (coding handoff off) — configure a mode +
+#   agent (Copilot / Claude Code / OpenHands) when you want the bot to hand
+#   coding to your agent.
+version: 1
+pr:
+  auto_merge: true
+  human_merge:
+    paths:
+      - .github/workflows/**
+      - .maintainer.yml
