@@ -97,8 +97,6 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    childprocess (5.1.0)
-      logger (~> 1.5)
     choice (0.2.0)
     coderay (1.1.3)
     concurrent-ruby (1.3.6)
@@ -389,7 +387,9 @@ GEM
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.2.0)
-    stripe (18.3.1)
+    stripe (20.1.0)
+      bigdecimal
+      logger
     tailwindcss-rails (4.4.0)
       railties (>= 7.0.0)
       tailwindcss-ruby (~> 4.0)
