@@ -25,4 +25,4 @@ pr:
   human_merge:
     paths:
       - .github/workflows/**
-      - .maintainer.yml
+      - .dz/maintainer/maintainer.yml
